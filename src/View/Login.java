@@ -10,7 +10,7 @@ public class Login extends JFrame implements ActionListener {
     JLabel lbLogin, lbUsername, lbPassword, lbQues;
     JTextField txtUsername;
     JPasswordField txtPassword;
-    JButton btnLogin, btnRegister;
+    JButton btnLogin, btnRegister, btnForgot;
     ImageIcon loginIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
 
     public Login(String s) {
@@ -31,18 +31,18 @@ public class Login extends JFrame implements ActionListener {
         Container container = getContentPane();
 
         pnMain = new JPanel();
-        pnMain.setLayout(null);
+        pnMain.setLayout(new GridLayout(1, 2));
 
         pnLeft = new JPanel();
         pnLeft.setLayout(null);
         pnLeft.setMinimumSize(new Dimension(400, 500));
-        pnLeft.setBounds(0, 0, 400, 500);
+//        pnLeft.setBounds(0, 0, 400, 500);
         pnLeft.setBackground(Color.GRAY);
 
         pnRight = new JPanel();
         pnRight.setLayout(null);
         pnRight.setMinimumSize(new Dimension(400, 500));
-        pnRight.setBounds(400, 0, 400, 500);
+//        pnRight.setBounds(400, 0, 400, 500);
         pnRight.setBackground(Color.WHITE);
 
         lbLogin = new JLabel("LOGIN");
@@ -75,6 +75,14 @@ public class Login extends JFrame implements ActionListener {
         btnLogin.setForeground(Color.BLACK);
         btnLogin.addActionListener(this);
 
+        btnForgot = new JButton("Forgot password?");
+        btnForgot.setBounds(50, 350, 300, 30);
+        btnForgot.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        btnForgot.setBackground(null);
+        btnForgot.setBorder(null);
+        btnForgot.setForeground(Color.BLACK);
+        btnForgot.addActionListener(this);
+
         lbQues = new JLabel("Don't have an account?");
         lbQues.setBounds(50, 400, 300, 30);
         lbQues.setFont(new Font("SansSerif", Font.BOLD, 15));
@@ -94,6 +102,7 @@ public class Login extends JFrame implements ActionListener {
         pnRight.add(lbPassword);
         pnRight.add(txtPassword);
         pnRight.add(btnLogin);
+        pnRight.add(btnForgot);
         pnRight.add(lbQues);
         pnRight.add(btnRegister);
 
