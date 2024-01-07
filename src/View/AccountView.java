@@ -1,11 +1,11 @@
-//package View;
-//
-//import Controller.AccountController;
-//import Models.Account;
+package View;
+
+import Controller.AccountController;
+import Models.Account;
 //
 //import java.util.Scanner;
 //
-//public class AccountView {
+public class AccountView {
 //
 //    private AccountController accountController = new AccountController();
 //
@@ -74,4 +74,4 @@
 //        AccountView view = new AccountView();
 //        view.run();
 //    }
-//}
+}

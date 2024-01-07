@@ -6,17 +6,11 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Login extends JFrame implements ActionListener {
-    JPanel pnMain;
-    JPanel pnRight;
-    JPanel pnLeft;
-    JLabel lbLogin;
-    JLabel lbUsername;
-    JLabel lbPassword;
-    JLabel lbQues;
+    JPanel pnMain, pnRight,  pnLeft;
+    JLabel lbLogin, lbUsername, lbPassword, lbQues;
     JTextField txtUsername;
     JPasswordField txtPassword;
-    JButton btnLogin;
-    JButton btnRegister;
+    JButton btnLogin, btnRegister;
     ImageIcon loginIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
 
     public Login(String s) {
