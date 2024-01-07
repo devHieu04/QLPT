@@ -7,14 +7,31 @@ public class House {
     private float waterCost;
     private float roomCost;
     private String furniture;
+    private int house_status;
 
-    public House(int houseId, float area, float electricityCost, float waterCost, float roomCost, String furniture) {
+
+    public House(int houseId, float area, float electricityCost, float waterCost, float roomCost, String furniture, int house_status) {
         this.houseId = houseId;
         this.area = area;
         this.electricityCost = electricityCost;
         this.waterCost = waterCost;
         this.roomCost = roomCost;
         this.furniture = furniture;
+        this.house_status = house_status;
+    }
+
+    public House(float area, float roomCost, String furniture) {
+        this.area = area;
+        this.roomCost = roomCost;
+        this.furniture = furniture;
+    }
+
+    public int getHouse_status() {
+        return house_status;
+    }
+
+    public void setHouse_status(int house_status) {
+        this.house_status = house_status;
     }
 
     // Getters and setters

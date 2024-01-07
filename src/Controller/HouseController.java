@@ -29,6 +29,23 @@ public class HouseController {
         }
     }
 
+    public List<Integer> getUnoccupiedHouseIDs() {
+        List<Integer> houseIDs = new ArrayList<>();
+        try {
+            String query = "SELECT house_id FROM House WHERE house_status = 0";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int houseId = resultSet.getInt("house_id");
+                houseIDs.add(houseId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return houseIDs;
+    }
+
     public List<House> getAllHouses() {
         List<House> houses = new ArrayList<>();
         try {
@@ -43,8 +60,9 @@ public class HouseController {
                 float waterCost = resultSet.getFloat("water_cost");
                 float roomCost = resultSet.getFloat("room_cost");
                 String furniture = resultSet.getString("furniture");
+                int house_status = resultSet.getInt("house_status");
 
-                House house = new House(houseId, area, electricityCost, waterCost, roomCost, furniture);
+                House house = new House(houseId, area, electricityCost, waterCost, roomCost, furniture, house_status);
                 houses.add(house);
             }
         } catch (SQLException e) {

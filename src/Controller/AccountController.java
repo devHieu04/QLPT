@@ -50,5 +50,19 @@ public class AccountController {
             return 0; // Trả về 0 nếu xảy ra lỗi trong quá trình đăng nhập
         }
     }
+    public boolean checkEmailExists(String email) {
+        try {
+            String query = "SELECT * FROM Account WHERE email = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next(); // Trả về true nếu email tồn tại trong cơ sở dữ liệu, ngược lại trả về false
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra trong quá trình kiểm tra email
+        }
+    }
+
 
 }

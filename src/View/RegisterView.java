@@ -1,7 +1,14 @@
 package View;
 
+import Controller.AccountController;
+import Models.Account;
+import TryCatch.EmailCheck;
+import TryCatch.PasswordCheck;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RegisterView extends JFrame {
     JTextField txtUsername,txtEmail;
@@ -25,6 +32,7 @@ public void showView()
     this.setVisible(true);
 }
     private void addView() {
+        Color mycolor = new Color(93,185,187);
         Container container = getContentPane();
         JPanel panelMain = new JPanel();
         panelMain.setLayout(new BoxLayout(panelMain,BoxLayout.Y_AXIS));
@@ -33,8 +41,14 @@ public void showView()
         JPanel panelTitle = new JPanel();
         panelTitle.setLayout(new FlowLayout());
         JLabel lbSignup = new JLabel("Sign Up with app");
+
+        Font font = lbSignup.getFont();
+        Font largerFont = font.deriveFont(font.getSize() * 1.5f); // Đặt kích thước 1.5 lần so với kích thước hiện tại
+        lbSignup.setFont(largerFont);
+        lbSignup.setForeground(mycolor);
         panelTitle.add(lbSignup);
         panelMain.add(panelTitle);
+
 
         JPanel panelEmail = new JPanel();
         panelEmail.setLayout(new FlowLayout());
@@ -85,9 +99,9 @@ public void showView()
         panelButton.add(btnRegister);
         btnCancel = new JButton("Cancel");
         btnCancel.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/cancel.png"));
+        btnCancel.setPreferredSize(new Dimension(200,50));
+        panelButton.add(btnCancel);
         panelMain.add(panelButton);
-
-
 
 
 
@@ -95,6 +109,77 @@ public void showView()
 
     private void addEvent()
     {
+        btnRegister.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = txtUsername.getText();
+                String password = String.valueOf(txtPassword.getPassword());
+                String confirm_password = String.valueOf(txtConfirmPassword.getPassword());
+                String email = txtEmail.getText();
+                EmailCheck emailCheck = new EmailCheck();
+                boolean emailValid = emailCheck.isValidEmail(email);
+                if(emailValid)
+                {
+                    if(username.equals("")||email.equals("")||password.equals("")||confirm_password.equals(""))
+                    {
+                        JOptionPane.showMessageDialog(null, "Không được để trống các trường thông tin");
+                    }
+                    else
+                    {
+                        if (password.equals(confirm_password))
+                        {
+                            PasswordCheck passwordCheck = new PasswordCheck();
 
+                            boolean passcheck = passwordCheck.isPasswordValid(password);
+
+                            AccountController accountController = new AccountController();
+                            boolean checkMail = accountController.checkEmailExists(email);
+                            if(checkMail)
+                            {
+                                JOptionPane.showMessageDialog(null, "chọn email khác nhé!!!");
+                            }
+                            else
+                            {
+                                if(passcheck)
+                                {
+                                    Account account = new Account(username , password , email, "user" );
+                                    boolean  i = accountController.registerAccount(account);
+
+                                    if(i)
+                                    {
+                                        JOptionPane.showMessageDialog(null, "Successful!");
+                                        txtEmail.setText("");
+                                        txtUsername.setText("");
+                                        txtPassword.setText("");
+                                        txtConfirmPassword.setText("");
+                                    }
+                                }
+                                else
+                                {
+                                    JOptionPane.showMessageDialog(null,"password phải bao gồm ít nhất 1 chữ in hoa , 1 chữ số , 1 kí tự đặc biệt và có độ dài hơn 8 kí tự");
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, "Register fail! vui lòng nhập lại các trường dữ liệu khác");
+                        }
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null,"nhập email đúng định dạng ví dụ: tragiang05@gmail.com ");
+                }
+
+
+            }
+        });
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
     }
 }
