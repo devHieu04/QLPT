@@ -8,11 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-//
-//import java.util.Scanner;
-//
 public class AccountView extends JFrame implements ActionListener {
-    JPanel pnMain, pnRight,  pnLeft, pnUser, pnExpense, pnManager;
+    JPanel pnMain, pnRight, pnLeft, pnUser, pnExpense, pnManager;
     CardLayout cardLayout;
     JButton btnTenant, btnExpense, btnManager;
     ImageIcon imgTenant = new ImageIcon(ClassLoader.getSystemResource("Icon/tent.png"));
@@ -22,6 +19,7 @@ public class AccountView extends JFrame implements ActionListener {
     Manager manager = new Manager();
     Tenant tenant = new Tenant();
     Expense expense = new Expense();
+
     public AccountView(String s) {
         super(s);
         addView();
@@ -95,6 +93,7 @@ public class AccountView extends JFrame implements ActionListener {
 
         container.add(pnMain);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnTenant)

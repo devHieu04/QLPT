@@ -5,20 +5,26 @@
 
 package View;
 
+import Controller.AccountController;
+import Models.Account;
+import TryCatch.EmailCheck;
+import TryCatch.PasswordCheck;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public class Register extends JFrame implements ActionListener {
+public class RegisterView extends JFrame implements ActionListener {
     JPanel pnMain, pnRight, pnLeft;
-    JLabel lbRegister, lbUsername, lbEmail, lbPassword,  lbConfirmPassword, lbQues;
-    JTextField txtUsername,  txtEmail;
-    JPasswordField txtPassword,  txtConfirmPassword;
-    JButton btnLogin,  btnRegister;
+    JLabel lbRegister, lbUsername, lbEmail, lbPassword, lbConfirmPassword, lbQues;
+    JTextField txtUsername, txtEmail;
+    JPasswordField txtPassword, txtConfirmPassword;
+    JButton btnLogin, btnRegister;
     ImageIcon RegisterIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/register.png"));
+    Login login = new Login("Welcome to Login");
 
-    public Register(String s) {
+    public RegisterView(String s) {
         super(s);
         addView();
     }
@@ -113,12 +119,12 @@ public class Register extends JFrame implements ActionListener {
 
         pnRight.add(lbRegister);
         pnRight.add(lbUsername);
-        pnRight.add(txtUsername);
         pnRight.add(lbEmail);
-        pnRight.add(txtEmail);
         pnRight.add(lbPassword);
-        pnRight.add(txtPassword);
         pnRight.add(lbConfirmPassword);
+        pnRight.add(txtUsername);
+        pnRight.add(txtEmail);
+        pnRight.add(txtPassword);
         pnRight.add(txtConfirmPassword);
         pnRight.add(btnRegister);
         pnRight.add(lbQues);
@@ -133,11 +139,47 @@ public class Register extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnRegister) {
-            JOptionPane.showMessageDialog((Component)null, "Register Successfully");
+            String username = txtUsername.getText();
+            String password = String.valueOf(txtPassword.getPassword());
+            String confirm_password = String.valueOf(txtConfirmPassword.getPassword());
+            String email = txtEmail.getText();
+            boolean emailValid = EmailCheck.isValidEmail(email);
+            if (emailValid) {
+                if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirm_password.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Không được để trống các trường thông tin");
+                } else {
+                    if (password.equals(confirm_password)) {
+                        boolean passcheck = PasswordCheck.isPasswordValid(password);
+                        AccountController accountController = new AccountController();
+                        boolean checkMail = accountController.checkEmailExists(email);
+                        if (checkMail) {
+                            JOptionPane.showMessageDialog(null, "chọn email khác nhé!!!");
+                        } else {
+                            if (passcheck) {
+                                Account account = new Account(username, password, email, "user");
+                                boolean i = accountController.registerAccount(account);
+                                if (i) {
+                                    JOptionPane.showMessageDialog(null, "Successful!");
+                                    txtEmail.setText("");
+                                    txtUsername.setText("");
+                                    txtPassword.setText("");
+                                    txtConfirmPassword.setText("");
+                                    login.showView();
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "password phải bao gồm ít nhất 1 chữ in hoa , 1 chữ số , 1 kí tự đặc biệt và có độ dài hơn 8 kí tự");
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Register fail! vui lòng nhập lại các trường dữ liệu khác");
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "nhập email đúng định dạng ví dụ: tragiang05@gmail.com ");
+            }
         }
 
         if (e.getSource() == btnLogin) {
-            Login login = new Login("Welcome to Login");
             login.showView();
             dispose();
         }

@@ -1,6 +1,8 @@
 package View;
 
 import Controller.AccountController;
+import View.Account.AccountView;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,7 +14,8 @@ public class Login extends JFrame implements ActionListener {
     JPasswordField txtPassword;
     JButton btnLogin, btnRegister, btnForgot;
     ImageIcon loginIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
-
+    AdminView adminView = new AdminView("Admin");
+    AccountView accountView = new AccountView("Người thuê nhà");
     public Login(String s) {
         super(s);
         addView();
@@ -118,18 +121,17 @@ public class Login extends JFrame implements ActionListener {
             String password = String.valueOf(txtPassword.getPassword());
             AccountController account = new AccountController();
             int stt = account.login(username, password);
-            if (stt == 2) {
-                System.out.println("ok admin nhé");
-            } else if (stt == 1) {
-                System.out.println("ok user nhé");
-            } else {
-                System.out.println("sai òi");
-            }
-        } else if (e.getSource() == btnRegister) {
-            Register register = new Register("Register");
+            if (stt == 2)
+                adminView.showView();
+            else if (stt == 1)
+                accountView.showView();
+            else
+                JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+        if (e.getSource() == btnRegister) {
+            RegisterView register = new RegisterView("Register");
             register.showView();
             dispose();
         }
-
     }
 }

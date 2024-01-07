@@ -10,8 +10,9 @@ public class Tenant {
     private String startDate;
     private float electricityUsage;
     private float waterUsage;
+    private int house_id;
 
-    public Tenant(String tenantId, String name, String dateOfBirth, String email, String startDate, float electricityUsage, float waterUsage) {
+    public Tenant(String tenantId, String name, String dateOfBirth, String email, String startDate, float electricityUsage, float waterUsage, int house_id) {
         this.tenantId = tenantId;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -19,6 +20,16 @@ public class Tenant {
         this.startDate = startDate;
         this.electricityUsage = electricityUsage;
         this.waterUsage = waterUsage;
+        this.house_id = house_id;
+    }
+
+
+    public int getHouse_id() {
+        return house_id;
+    }
+
+    public void setHouse_id(int house_id) {
+        this.house_id = house_id;
     }
 
     public String getTenantId() {

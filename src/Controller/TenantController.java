@@ -14,7 +14,7 @@ public class TenantController {
 
     public boolean addTenant(Tenant tenant) {
         try {
-            String query = "INSERT INTO Tenant (tenant_id, name, date_of_birth, email, start_date, electricity_usage, water_usage) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Tenant (tenant_id, name, date_of_birth, email, start_date, electricity_usage, water_usage,house_id) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, tenant.getTenantId());
             preparedStatement.setString(2, tenant.getName());
@@ -23,6 +23,7 @@ public class TenantController {
             preparedStatement.setString(5, tenant.getStartDate());
             preparedStatement.setFloat(6, tenant.getElectricityUsage());
             preparedStatement.setFloat(7, tenant.getWaterUsage());
+            preparedStatement.setInt(8, tenant.getHouse_id());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -47,8 +48,9 @@ public class TenantController {
                 String startDate = resultSet.getString("start_date");
                 float electricityUsage = resultSet.getFloat("electricity_usage");
                 float waterUsage = resultSet.getFloat("water_usage");
+                int house_id = resultSet.getInt("house_id");
 
-                Tenant tenant = new Tenant(tenantId, name, dateOfBirth, email, startDate, electricityUsage, waterUsage);
+                Tenant tenant = new Tenant(tenantId, name, dateOfBirth, email, startDate, electricityUsage, waterUsage,house_id);
                 tenants.add(tenant);
             }
         } catch (SQLException e) {
