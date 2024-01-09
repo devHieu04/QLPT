@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AccountView extends JFrame implements ActionListener {
+public class  AccountView extends JFrame implements ActionListener {
     JPanel pnMain, pnRight, pnLeft, pnUser, pnExpense, pnManager;
     CardLayout cardLayout;
     JButton btnTenant, btnExpense, btnManager;

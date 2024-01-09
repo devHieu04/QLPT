@@ -165,6 +165,7 @@ public class RegisterView extends JFrame implements ActionListener {
                                     txtPassword.setText("");
                                     txtConfirmPassword.setText("");
                                     login.showView();
+                                    dispose();
                                 }
                             } else {
                                 JOptionPane.showMessageDialog(null, "password phải bao gồm ít nhất 1 chữ in hoa , 1 chữ số , 1 kí tự đặc biệt và có độ dài hơn 8 kí tự");

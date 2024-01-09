@@ -52,7 +52,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnId.setBackground(null);
         lbId = new JLabel("CCCD/CMND ");
         lbId.setFont(font);
-        lbId.setPreferredSize(new Dimension(150, 20));
+        lbId.setPreferredSize(new Dimension(175, 25));
         lbTenantID = new JLabel(tenant.getTenantId());
         lbTenantID.setFont(font);
         lbTenantID.setPreferredSize(lbId.getPreferredSize());
@@ -64,7 +64,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnName.setBackground(null);
         lbName = new JLabel("Họ và tên ");
         lbName.setFont(font);
-        lbName.setPreferredSize(new Dimension(150, 20));
+        lbName.setPreferredSize(new Dimension(175, 25));
         lbTenantName = new JLabel(tenant.getName());
         lbTenantName.setFont(font);
         lbTenantName.setPreferredSize(lbName.getPreferredSize());
@@ -76,7 +76,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnBrith.setBackground(null);
         LbBrith = new JLabel("Ngày sinh ");
         LbBrith.setFont(font);
-        LbBrith.setPreferredSize(new Dimension(150, 20));
+        LbBrith.setPreferredSize(new Dimension(175, 25));
         lbTenantBrith = new JLabel(tenant.getDateOfBirth());
         lbTenantBrith.setFont(font);
         lbTenantBrith.setPreferredSize(LbBrith.getPreferredSize());
@@ -88,7 +88,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnEmail.setBackground(null);
         lbEmail = new JLabel("Email ");
         lbEmail.setFont(font);
-        lbEmail.setPreferredSize(new Dimension(150, 20));
+        lbEmail.setPreferredSize(new Dimension(175, 25));
         lbTenantEmail = new JLabel(tenant.getEmail());
         lbTenantEmail.setFont(font);
         lbTenantEmail.setPreferredSize(lbEmail.getPreferredSize());
@@ -109,7 +109,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnStartDate.setBackground(null);
         LbStartDate = new JLabel("Ngày bắt đầu thuê ");
         LbStartDate.setFont(font);
-        LbStartDate.setPreferredSize(new Dimension(150, 20));
+        LbStartDate.setPreferredSize(new Dimension(175, 25));
         lbTenantStartDate = new JLabel(tenant.getStartDate());
         lbTenantStartDate.setFont(font);
         lbTenantStartDate.setPreferredSize(LbStartDate.getPreferredSize());
@@ -121,7 +121,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnElectricNumber.setBackground(null);
         lbElectricNumber = new JLabel("Số điện ");
         lbElectricNumber.setFont(font);
-        lbElectricNumber.setPreferredSize(new Dimension(150, 20));
+        lbElectricNumber.setPreferredSize(new Dimension(175, 25));
         lbTenantElectricNumber = new JLabel(tenant.getElectricityUsage() + "");
         lbTenantElectricNumber.setFont(font);
         lbTenantElectricNumber.setPreferredSize(lbElectricNumber.getPreferredSize());
@@ -133,7 +133,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnWaterNumber.setBackground(null);
         lbWaterNumber = new JLabel("Số nước ");
         lbWaterNumber.setFont(font);
-        lbWaterNumber.setPreferredSize(new Dimension(150, 20));
+        lbWaterNumber.setPreferredSize(new Dimension(175, 25));
         lbTenantWaterNumber = new JLabel(tenant.getWaterUsage() + "");
         lbTenantWaterNumber.setFont(font);
         lbTenantWaterNumber.setPreferredSize(lbWaterNumber.getPreferredSize());
@@ -145,7 +145,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnRoomNumber.setBackground(null);
         lbRoomNumber = new JLabel("Số phòng ");
         lbRoomNumber.setFont(font);
-        lbRoomNumber.setPreferredSize(new Dimension(150, 20));
+        lbRoomNumber.setPreferredSize(new Dimension(175, 25));
         lbTenantRoomNumber = new JLabel(tenant.getHouse_id() + "");
         lbTenantRoomNumber.setFont(font);
         lbTenantRoomNumber.setPreferredSize(lbRoomNumber.getPreferredSize());
@@ -187,10 +187,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnId.setBackground(null);
         lbId = new JLabel("CCCD/CMND ");
         lbId.setFont(font);
-        lbId.setPreferredSize(new Dimension(150, 25));
+        lbId.setPreferredSize(new Dimension(120, 25));
         txtTenantID = new JTextField();
         txtTenantID.setFont(font);
-        txtTenantID.setPreferredSize(lbId.getPreferredSize());
+        txtTenantID.setPreferredSize(new Dimension(200, 25));
         txtTenantID.setText(lbTenantID.getText());
         pnId.add(lbId);
         pnId.add(txtTenantID);
@@ -200,10 +200,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnName.setBackground(null);
         lbName = new JLabel("Họ và tên ");
         lbName.setFont(font);
-        lbName.setPreferredSize(new Dimension(150, 25));
+        lbName.setPreferredSize(new Dimension(120, 25));
         txtTenantName = new JTextField();
         txtTenantName.setFont(font);
-        txtTenantName.setPreferredSize(lbName.getPreferredSize());
+        txtTenantName.setPreferredSize(txtTenantID.getPreferredSize());
         txtTenantName.setText(lbTenantName.getText());
         pnName.add(lbName);
         pnName.add(txtTenantName);
@@ -213,10 +213,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnBrith.setBackground(null);
         LbBrith = new JLabel("Ngày sinh ");
         LbBrith.setFont(font);
-        LbBrith.setPreferredSize(new Dimension(150, 25));
+        LbBrith.setPreferredSize(new Dimension(120, 25));
         txtTenantBrith = new JTextField();
         txtTenantBrith.setFont(font);
-        txtTenantBrith.setPreferredSize(LbBrith.getPreferredSize());
+        txtTenantBrith.setPreferredSize(txtTenantID.getPreferredSize());
         txtTenantBrith.setText(lbTenantBrith.getText());
         pnBrith.add(LbBrith);
         pnBrith.add(txtTenantBrith);
@@ -226,10 +226,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnEmail.setBackground(null);
         lbEmail = new JLabel("Email ");
         lbEmail.setFont(font);
-        lbEmail.setPreferredSize(new Dimension(150, 25));
+        lbEmail.setPreferredSize(new Dimension(120, 25));
         txtTenantEmail = new JTextField();
         txtTenantEmail.setFont(font);
-        txtTenantEmail.setPreferredSize(lbEmail.getPreferredSize());
+        txtTenantEmail.setPreferredSize(txtTenantID.getPreferredSize());
         txtTenantEmail.setText(lbTenantEmail.getText());
         pnEmail.add(lbEmail);
         pnEmail.add(txtTenantEmail);
@@ -282,5 +282,10 @@ public class TenantView extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == btnUpdate) {
+            input();
+            tenC.updateTenant(new Tenant(tenantId, name, dateOfBirth, email));
+            setValue();
+        }
     }
 }
