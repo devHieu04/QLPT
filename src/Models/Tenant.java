@@ -3,14 +3,12 @@ package Models;
 import java.util.Date;
 
 public class Tenant {
-    private String tenantId;
-    private String name;
-    private String dateOfBirth;
-    private String email;
-    private String startDate;
-    private float electricityUsage;
-    private float waterUsage;
+    private String tenantId, name, dateOfBirth, email, startDate;
+    private float electricityUsage, waterUsage;
     private int house_id;
+
+    public Tenant() {
+    }
 
     public Tenant(String tenantId, String name, String dateOfBirth, String email, String startDate, float electricityUsage, float waterUsage, int house_id) {
         this.tenantId = tenantId;
@@ -23,6 +21,12 @@ public class Tenant {
         this.house_id = house_id;
     }
 
+    public Tenant(String tenantId, String name, String dateOfBirth, String email) {
+        this.tenantId = tenantId;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+    }
 
     public int getHouse_id() {
         return house_id;
@@ -87,6 +91,7 @@ public class Tenant {
     public void setWaterUsage(float waterUsage) {
         this.waterUsage = waterUsage;
     }
+
 // Getters and setters
 }
 

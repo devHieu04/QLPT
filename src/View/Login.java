@@ -1,6 +1,7 @@
 package View;
 
 import Controller.AccountController;
+import Models.Account;
 import View.Account.AccountView;
 
 import java.awt.*;
@@ -20,7 +21,6 @@ public class Login extends JFrame implements ActionListener {
         super(s);
         addView();
     }
-
     public void showView() {
         setSize(800, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -39,13 +39,11 @@ public class Login extends JFrame implements ActionListener {
         pnLeft = new JPanel();
         pnLeft.setLayout(null);
         pnLeft.setMinimumSize(new Dimension(400, 500));
-//        pnLeft.setBounds(0, 0, 400, 500);
         pnLeft.setBackground(Color.GRAY);
 
         pnRight = new JPanel();
         pnRight.setLayout(null);
         pnRight.setMinimumSize(new Dimension(400, 500));
-//        pnRight.setBounds(400, 0, 400, 500);
         pnRight.setBackground(Color.WHITE);
 
         lbLogin = new JLabel("LOGIN");
@@ -119,12 +117,16 @@ public class Login extends JFrame implements ActionListener {
         if (e.getSource() == btnLogin) {
             String username = txtUsername.getText();
             String password = String.valueOf(txtPassword.getPassword());
-            AccountController account = new AccountController();
-            int stt = account.login(username, password);
-            if (stt == 2)
+            AccountController accountC = new AccountController();
+            Account acc = accountC.login(username, password);
+            if (acc.getRole().equals("admin")) {
                 adminView.showView();
-            else if (stt == 1)
-                accountView.showView();
+                dispose();
+            }
+            else if (acc.getRole().equals("user")) {
+                accountView.showView(acc.getEmail());
+                dispose();
+            }
             else
                 JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
@@ -134,4 +136,6 @@ public class Login extends JFrame implements ActionListener {
             dispose();
         }
     }
+
+
 }

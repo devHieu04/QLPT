@@ -1154,8 +1154,8 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
     </schema>
     <schema id="328" parent="1" name="quan_ly_nha_cho_thue">
       <Current>1</Current>
-      <IntrospectionTimestamp>2024-01-08.03:01:09</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2024-01-07.13:01:09</LocalIntrospectionTimestamp>
+      <IntrospectionTimestamp>2024-01-09.10:12:48</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2024-01-08.20:12:48</LocalIntrospectionTimestamp>
       <CollationName>utf8mb4_general_ci</CollationName>
     </schema>
     <schema id="329" parent="1" name="test">
@@ -1190,7 +1190,7 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <CollationName>utf8mb4_general_ci</CollationName>
     </table>
     <column id="338" parent="334" name="account_id">
-      <AutoIncrement>3</AutoIncrement>
+      <AutoIncrement>4</AutoIncrement>
       <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -1219,159 +1219,175 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="344" parent="334" name="PRIMARY">
+    <index id="344" parent="334" name="email">
+      <ColNames>email</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="345" parent="334" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="345" parent="335" name="house_id">
+    <key id="346" parent="334" name="email">
+      <UnderlyingIndexName>email</UnderlyingIndexName>
+    </key>
+    <column id="347" parent="335" name="house_id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="346" parent="335" name="area">
+    <column id="348" parent="335" name="area">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="347" parent="335" name="electricity_cost">
+    <column id="349" parent="335" name="electricity_cost">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="348" parent="335" name="water_cost">
+    <column id="350" parent="335" name="water_cost">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
-    <column id="349" parent="335" name="room_cost">
+    <column id="351" parent="335" name="room_cost">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="350" parent="335" name="furniture">
+    <column id="352" parent="335" name="furniture">
       <DasType>varchar(100)|0s</DasType>
       <Position>6</Position>
     </column>
-    <index id="351" parent="335" name="PRIMARY">
+    <index id="353" parent="335" name="PRIMARY">
       <ColNames>house_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="352" parent="335" name="PRIMARY">
+    <key id="354" parent="335" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="353" parent="336" name="rental_id">
+    <column id="355" parent="336" name="rental_id">
       <AutoIncrement>1</AutoIncrement>
       <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="354" parent="336" name="house_id">
+    <column id="356" parent="336" name="house_id">
       <DasType>int(11)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="355" parent="336" name="tenant_id">
+    <column id="357" parent="336" name="tenant_id">
       <DasType>varchar(20)|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="356" parent="336" name="monthly_payment">
+    <column id="358" parent="336" name="monthly_payment">
       <DasType>float|0s</DasType>
       <Position>4</Position>
     </column>
-    <foreign-key id="357" parent="336" name="rental_ibfk_1">
+    <foreign-key id="359" parent="336" name="rental_ibfk_1">
       <ColNames>house_id</ColNames>
       <RefColNames>house_id</RefColNames>
       <RefTableName>house</RefTableName>
     </foreign-key>
-    <foreign-key id="358" parent="336" name="rental_ibfk_2">
+    <foreign-key id="360" parent="336" name="rental_ibfk_2">
       <ColNames>tenant_id</ColNames>
       <RefColNames>tenant_id</RefColNames>
       <RefTableName>tenant</RefTableName>
     </foreign-key>
-    <index id="359" parent="336" name="PRIMARY">
+    <index id="361" parent="336" name="PRIMARY">
       <ColNames>rental_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="360" parent="336" name="house_id">
+    <index id="362" parent="336" name="house_id">
       <ColNames>house_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="361" parent="336" name="tenant_id">
+    <index id="363" parent="336" name="tenant_id">
       <ColNames>tenant_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="362" parent="336" name="PRIMARY">
+    <key id="364" parent="336" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <trigger id="363" parent="336" name="calculate_monthly_payment">
+    <trigger id="365" parent="336" name="calculate_monthly_payment">
       <Definer>root@localhost</Definer>
       <Events>I</Events>
       <SourceTextLength>192</SourceTextLength>
       <Turn>before-row</Turn>
     </trigger>
-    <column id="364" parent="337" name="tenant_id">
+    <column id="366" parent="337" name="tenant_id">
       <DasType>varchar(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="365" parent="337" name="name">
+    <column id="367" parent="337" name="name">
       <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="366" parent="337" name="date_of_birth">
+    <column id="368" parent="337" name="date_of_birth">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="367" parent="337" name="email">
+    <column id="369" parent="337" name="email">
       <DasType>varchar(100)|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="368" parent="337" name="start_date">
+    <column id="370" parent="337" name="start_date">
       <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="369" parent="337" name="electricity_usage">
+    <column id="371" parent="337" name="electricity_usage">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="370" parent="337" name="water_usage">
+    <column id="372" parent="337" name="water_usage">
       <DasType>float|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
-    <column id="371" parent="337" name="house_id">
+    <column id="373" parent="337" name="house_id">
       <DasType>int(11)|0s</DasType>
       <Position>8</Position>
     </column>
-    <foreign-key id="372" parent="337" name="tenant_ibfk_1">
+    <foreign-key id="374" parent="337" name="tenant_ibfk_1">
       <ColNames>house_id</ColNames>
       <RefColNames>house_id</RefColNames>
       <RefTableName>house</RefTableName>
     </foreign-key>
-    <index id="373" parent="337" name="PRIMARY">
+    <index id="375" parent="337" name="PRIMARY">
       <ColNames>tenant_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="374" parent="337" name="house_id">
+    <index id="376" parent="337" name="email">
+      <ColNames>email</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="377" parent="337" name="house_id">
       <ColNames>house_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="375" parent="337" name="PRIMARY">
+    <key id="378" parent="337" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <key id="379" parent="337" name="email">
+      <UnderlyingIndexName>email</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>

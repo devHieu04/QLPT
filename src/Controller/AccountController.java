@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import Models.Account;
 
 public class AccountController {
-    private Connection connect = DatabaseConnection.getConnection();
+    private final Connection connect = DatabaseConnection.getConnection();
 
     public boolean registerAccount(Account account) {
         try {
@@ -26,9 +26,9 @@ public class AccountController {
         }
     }
 
-    public int login(String username, String password) {
+    public Account login(String username, String password) {
         try {
-            String query = "SELECT role FROM Account WHERE username = ? AND password = ?";
+            String query = "SELECT role, email FROM Account WHERE username = ? AND password = ?";
             PreparedStatement preparedStatement = connect.prepareStatement(query);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
@@ -36,15 +36,13 @@ public class AccountController {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String role = resultSet.getString("role");
-                if (role.equalsIgnoreCase("admin"))
-                    return 2; // Trả về 2 nếu đăng nhập là admin
-                else
-                    return 1; // Trả về 1 nếu đăng nhập là user thông thường
+                String email = resultSet.getString("email");
+                return new Account(email, role);
             } else
-                return 0; // Trả về 0 nếu không có kết quả hoặc đăng nhập không thành công
+                return null; // Trả về 0 nếu không có kết quả hoặc đăng nhập không thành công
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1; // Trả về 0 nếu xảy ra lỗi trong quá trình đăng nhập
+            return null; // Trả về 0 nếu xảy ra lỗi trong quá trình đăng nhập
         }
     }
 
@@ -61,6 +59,5 @@ public class AccountController {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình kiểm tra email
         }
     }
-
 
 }

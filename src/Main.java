@@ -7,11 +7,7 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Login login = new Login("Welcome to Login");
-                AccountView accountView = new AccountView("Người thuê nhà");
-                AdminView adminView = new AdminView("Admin");
-//                adminView.showView();
                 login.showView();
-//                accountView.showView();
             }
         });
     }

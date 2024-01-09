@@ -1,8 +1,5 @@
 package View.Account;
 
-import Controller.AccountController;
-import Models.Account;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,21 +13,18 @@ public class AccountView extends JFrame implements ActionListener {
     ImageIcon imgHouse = new ImageIcon(ClassLoader.getSystemResource("Icon/house.png"));
     ImageIcon imgRental = new ImageIcon(ClassLoader.getSystemResource("Icon/rent.png"));
     Color color = new Color(93, 185, 187);
-    Manager manager = new Manager();
-    Tenant tenant = new Tenant();
-    Expense expense = new Expense();
-
+    String email;
     public AccountView(String s) {
         super(s);
         addView();
     }
-
-    public void showView() {
+    public void showView(String email) {
         setSize(1000, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
+        this.email = email;
     }
 
     private void addView() {
@@ -56,6 +50,7 @@ public class AccountView extends JFrame implements ActionListener {
         btnTenant.setForeground(color);
         btnTenant.setFont(btnTenant.getFont().deriveFont(Font.BOLD, 20));
         btnTenant.setIcon(imgTenant);
+        btnTenant.setFocusPainted(false);
         btnTenant.addActionListener(this);
 
         btnExpense = new JButton("Chi phí");
@@ -63,6 +58,7 @@ public class AccountView extends JFrame implements ActionListener {
         btnExpense.setForeground(color);
         btnExpense.setFont(btnExpense.getFont().deriveFont(Font.BOLD, 20));
         btnExpense.setIcon(imgHouse);
+        btnExpense.setFocusPainted(false);
         btnExpense.addActionListener(this);
 
         btnManager = new JButton("Quản lý nhà");
@@ -70,6 +66,7 @@ public class AccountView extends JFrame implements ActionListener {
         btnManager.setForeground(color);
         btnManager.setFont(btnManager.getFont().deriveFont(Font.BOLD, 20));
         btnManager.setIcon(imgRental);
+        btnManager.setFocusPainted(false);
         btnManager.addActionListener(this);
 
         pnUser.add(btnTenant, BorderLayout.CENTER);
@@ -84,10 +81,6 @@ public class AccountView extends JFrame implements ActionListener {
         pnRight.setLayout(new CardLayout());
         cardLayout = (CardLayout) pnRight.getLayout();
 
-        pnRight.add(tenant, "tenant");
-        pnRight.add(expense, "expense");
-        pnRight.add(manager, "manager");
-
         pnMain.add(pnLeft, BorderLayout.WEST);
         pnMain.add(pnRight, BorderLayout.CENTER);
 
@@ -96,12 +89,27 @@ public class AccountView extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnTenant)
-            cardLayout.show(pnRight, "tenant");
-        else if (e.getSource() == btnExpense)
-            cardLayout.show(pnRight, "expense");
-        else if (e.getSource() == btnManager)
-            cardLayout.show(pnRight, "manager");
+        if (e.getSource() == btnTenant) {
+            pnRight.removeAll();
+            TenantView tenantView = new TenantView(email);
+            pnRight.add(tenantView);
+            pnRight.revalidate();
+            pnRight.repaint();
+        }
+        else if (e.getSource() == btnExpense) {
+            pnRight.removeAll();
+            ExpenseView expenseView = new ExpenseView();
+            pnRight.add(expenseView);
+            pnRight.revalidate();
+            pnRight.repaint();
+        }
+        else if (e.getSource() == btnManager) {
+            pnRight.removeAll();
+            ManagerView managerView = new ManagerView();
+            pnRight.add(managerView);
+            pnRight.revalidate();
+            pnRight.repaint();
+        }
     }
 //
 //    private AccountController accountController = new AccountController();

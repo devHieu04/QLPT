@@ -4,15 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Expense extends JPanel implements ActionListener {
-    public Expense() {
+public class ManagerView extends JPanel implements ActionListener {
+    public ManagerView() {
         super();
         addView();
     }
 
     private void addView() {
         setVisible(true);
-        setBackground(Color.RED);
+        setBackground(Color.BLUE);
     }
 
     @Override
