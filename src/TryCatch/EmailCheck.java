@@ -13,4 +13,16 @@ public class EmailCheck {
 
         return matcher.matches(); // Trả về true nếu email hợp lệ, ngược lại trả về false
     }
+    public boolean isNumericAndLength12(String input) {
+        if (input == null || input.length() != 12) {
+            return false;
+        }
+        try {
+            Long.parseLong(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 }
