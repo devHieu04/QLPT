@@ -32,6 +32,20 @@ public class TenantController {
             return false;
         }
     }
+    public boolean updateElectricWaterUsageToZero(String tenantId) {
+        try {
+            String query = "UPDATE Tenant SET electricity_usage = 0, water_usage = 0 WHERE tenant_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tenantId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean deleteTenantByHouseId(int houseId) {
         try {
             String query = "DELETE FROM Tenant WHERE house_id = ?";

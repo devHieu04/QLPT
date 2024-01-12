@@ -19,18 +19,19 @@ import java.util.List;
 
 public class AdminView extends JFrame {
     private JPanel leftPanel;
-    private JTable tenantTable , houseTable;
-    private DefaultTableModel tableTenantModel,tabelHouseModel;
+    private JTable tenantTable , houseTable ,rentalTable;
+    private DefaultTableModel tableTenantModel,tabelHouseModel,tableRentalModel;
 
     private JPanel rightPanel;
     JComboBox<Integer> houseIDComboBox;
     JComboBox<Integer> houseStatusComboBox;
     private CardLayout cardLayout;
-    private JButton tentButton , rentalButton, houseButton;
+    private JButton tentButton , rentalButton, houseButton, logoutButton;
     private JTextField txtTenantID, txtTenantName , txtTenantEmail,txtDateofBirth , txtDateStart,txtElectricUsage,txtWaterUsage;
     private JTextField txtArea , txtRoomcost, txtFurniture;
-
+    private JTextField txtID;
     private JButton btnAddTenant , btnDeleteTenant , btnUpdateTenant,btnSearchTenant;
+    private JButton btnSearchRental , btnDeleteRental;
     private JButton btnAddHouse , btnDeleteHouse , btnUpdateHouse,btnSearchHouse,btnArrAreaHouse;
     TenantController tenantController = new TenantController();
     HouseController houseController = new HouseController();
@@ -75,7 +76,7 @@ public class AdminView extends JFrame {
         tentButton = new JButton("Người thuê nhà");
         tentButton.setBackground(myColor);
         tentButton.setForeground(myColor);
-        tentButton.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/tent.png") );
+        tentButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("Icon/tent.png")) );
          // Đặt màu văn bản là trắng hoặc màu khác để văn bản hiển thị rõ ràng trên nền
 
         tentButton.setFont(tentButton.getFont().deriveFont(Font.BOLD, 30));
@@ -83,26 +84,63 @@ public class AdminView extends JFrame {
         leftPanel.add(panelBtUser);
         JPanel panelBtHouse = new JPanel(new BorderLayout());
         houseButton = new JButton("Phòng thuê");
-        houseButton.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/house.png"));
+        houseButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("Icon/house.png")));
         houseButton.setBackground(myColor);
         houseButton.setForeground(myColor);
         houseButton.setFont(houseButton.getFont().deriveFont(Font.BOLD, 20));
         panelBtHouse.add(houseButton);
         leftPanel.add(panelBtHouse);
+
         JPanel panelRental = new JPanel(new BorderLayout());
         rentalButton = new JButton("Rental");
         rentalButton.setForeground(myColor);
-        rentalButton.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/rent.png"));
+        rentalButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("Icon/rent.png")));
         panelRental.add(rentalButton, BorderLayout.CENTER);
         leftPanel.add(panelRental);
+
+        JPanel panelLogout = new JPanel(new BorderLayout());
+        logoutButton = new JButton("Đăng xuất");
+        logoutButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("Icon/signout.png")));
+        panelLogout.add(logoutButton);
+        leftPanel.add(panelLogout);
 
     }
 
     private JPanel createRentalPanel() {
-        JPanel MainUser = new JPanel();
-        JLabel lbTest = new JLabel("Tst");
-        MainUser.add(lbTest);
-        return MainUser;
+        JPanel panelRentalMain = new JPanel();
+        panelRentalMain.setLayout(new BorderLayout());
+
+        JPanel panelCenter = new JPanel();
+        panelCenter.setLayout(new BorderLayout());
+        String[] columnNames = {"ID rental","Số phòng", "CCCD người thuê","Tổng tiền nhà"};
+        tableRentalModel= new DefaultTableModel(columnNames,0);
+        rentalTable=new JTable(tableRentalModel);
+        rentalTable.setShowGrid(true);
+        rentalTable.setShowVerticalLines(true);
+        JScrollPane scrollPane = new JScrollPane(rentalTable);
+        panelCenter.add(scrollPane);
+        panelRentalMain.add(panelCenter,BorderLayout.CENTER);
+        showAllRentals();
+        selectIndexRentalTable();
+
+        JPanel panelBottom = new JPanel();
+        panelBottom.setLayout(new FlowLayout());
+        panelRentalMain.add(panelBottom,BorderLayout.SOUTH);
+        JLabel lbCCCD = new JLabel("Căn Cước Công Dân");
+        panelBottom.add(lbCCCD);
+        txtID = new JTextField();
+        txtID.setPreferredSize(new Dimension(300,35));
+        panelBottom.add(txtID);
+        btnSearchRental = new JButton("Tìm bill theo CCCD");
+        btnSearchRental.setIcon(new ImageIcon(ClassLoader.getSystemResource("Icon/searchBill.png")));
+        btnSearchRental.setPreferredSize(new Dimension(200,40));
+        panelBottom.add(btnSearchRental);
+        btnDeleteRental = new JButton("Xoá bill");
+        btnDeleteRental.setIcon(new ImageIcon(ClassLoader.getSystemResource("Icon/deleteBill.png")));
+        btnDeleteRental.setPreferredSize(new Dimension(200,40));
+        panelBottom.add(btnDeleteRental);
+
+        return panelRentalMain;
     }
 
     private JPanel createHousePanel() {
@@ -381,7 +419,46 @@ public class AdminView extends JFrame {
             tabelHouseModel.addRow(rowData);
         }
     }
+    public void showAllRentals() {
+        // Xóa tất cả các dòng hiện tại trong tableRentalModel
+        tableRentalModel.setRowCount(0);
 
+        // Lấy danh sách tất cả các thông tin thuê nhà
+        List<Rental> rentals = rentalController.getAllRentals();
+
+        // Đổ dữ liệu vào tableRentalModel
+        for (Rental rental : rentals) {
+            Object[] rowData = {
+                    rental.getRentalId(),
+                    rental.getHouseId(),
+                    rental.getTenantId(),
+                    rental.getMonthlyPayment()
+            };
+            tableRentalModel.addRow(rowData);
+        }
+    }
+
+    private void selectIndexRentalTable() {
+        ListSelectionModel selectionModel = rentalTable.getSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        selectionModel.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = rentalTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    String tenantId = tableRentalModel.getValueAt(selectedRow, 2).toString();
+
+                    // Hiển thị giá trị lên các JTextField tương ứng
+                    txtID.setText(tenantId);
+
+
+                    // Thực hiện các hành động khác liên quan đến việc chọn dòng trong bảng Rental ở đây
+                    // Ví dụ: Hiển thị thông tin chi tiết, gọi hàm xử lý, v.v.
+                }
+            }
+        });
+    }
 
     private void selectIndexHouseTable() {
         ListSelectionModel selectionModel = houseTable.getSelectionModel();
@@ -486,12 +563,21 @@ public class AdminView extends JFrame {
                 cardLayout.show(rightPanel,"House");
             }
         });
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Login login = new Login("Login");
+                login.showView();
+                dispose();
+            }
+        });
 
         btnAddTenant.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clearTable(tableTenantModel);
                 addTenant();
+                showAllHouses();
             }
         });
 
@@ -507,13 +593,14 @@ public class AdminView extends JFrame {
                 else if(tenantController.isTenantIdExists(txtTenantID.getText()))
                 {
                     int houseId=tenantController.getHouseIdByTenantId(tenantId);
+                    boolean setCost = houseController.updateUtilityCost(houseId,0,0);
                     boolean check = houseController.updateHouseStatus(houseId,0);
                     boolean rent = rentalController.deleteRentalByTenantId(tenantId);
                     boolean delete = tenantController.deleteTenant(tenantId);
 
                     if(rent)
                     {
-                        if(check)
+                        if(check && setCost)
                         {
 
                             if(delete){
@@ -527,6 +614,7 @@ public class AdminView extends JFrame {
                                 txtWaterUsage.setText("");
                                 updateHouseComboBox(houseIDComboBox);
                                 showAllTenants();
+                                showAllHouses();
                             }
 
 
@@ -546,104 +634,7 @@ public class AdminView extends JFrame {
         btnUpdateTenant.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clearTable(tableTenantModel);
-
-                String tenant_id = txtTenantID.getText();
-                String tenant_name = txtTenantName.getText();
-                String tenant_birthday = txtDateofBirth.getText();
-                String tenant_email = txtTenantEmail.getText();
-                String tenant_startDate = txtDateStart.getText();
-                float tenant_electricUsage = Float.parseFloat(txtElectricUsage.getText());
-                float tenant_WaterUsage = Float.parseFloat(txtWaterUsage.getText());
-                int house_id = (Integer) houseIDComboBox.getSelectedItem();
-                if(tenant_id.equals("")||tenant_birthday.equals("")||tenant_email.equals("")||tenant_startDate.equals("")||tenant_name.equals("")||txtElectricUsage.getText().equals("")||txtWaterUsage.getText().equals("")) {
-                    JOptionPane.showMessageDialog(null,"Các ô dữ liệu phải được điền hoặc chọn đầy đủ, số điện nước phải là số nguyên hoặc thập phân");
-                }else if(!emailCheck.isValidEmail(tenant_email))
-                {
-                    JOptionPane.showMessageDialog(null,"email phải đúng định dạng ví dụ tragiang@gmail.com");
-                }
-                else if(tenantController.isTenantIdExists(tenant_id))
-                {
-                    if(emailCheck.isValidEmail(tenant_email))
-                    {
-                        int houseId=tenantController.getHouseIdByTenantId(tenant_id);
-                        if(houseId!=house_id)
-                        {
-                            int r = JOptionPane.showConfirmDialog(null, "Bạn có sự thay đổi về phòng? Lưu ý thay đổi này sẽ dẫn thời thay đổi về giá tổng giá trị tiền của khách ở phòng này.Nếu chỉ muốn thay đổi các thông tin khác hãy chọn NO", "Thông báo", JOptionPane.YES_NO_OPTION);
-                            if(r==JOptionPane.YES_OPTION)
-                            {
-                                Tenant tenantNew = new Tenant(tenant_id,tenant_name,tenant_birthday,tenant_email,tenant_startDate, tenant_electricUsage,tenant_WaterUsage,house_id);
-                                boolean update = tenantController.updateTenant(tenantNew);
-                                boolean check = houseController.updateHouseStatus(houseId,0);
-                                boolean updateHouseStatus = houseController.updateHouseStatus(house_id,1);
-                                if(check && updateHouseStatus)
-                                {
-                                    if(update)
-                                    {
-                                        boolean updateRental = rentalController.updateHouseIdByTenantId(tenant_id,house_id);
-                                        if(updateRental)
-                                        {
-                                            JOptionPane.showMessageDialog(null,"cập nhật  thành công");
-                                            txtTenantID.setText("");
-                                            txtTenantName.setText("");
-                                            txtDateofBirth.setText("");
-                                            txtElectricUsage.setText("");
-                                            txtDateStart.setText("");
-                                            txtTenantEmail.setText("");
-                                            txtWaterUsage.setText("");
-                                            updateHouseComboBox(houseIDComboBox);
-                                            showAllTenants();
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Tenant tenantUpdate = new Tenant(tenant_id,tenant_name,tenant_birthday,tenant_email,tenant_startDate, tenant_electricUsage,tenant_WaterUsage,houseId);
-                                boolean updateTenant = tenantController.updateTenant(tenantUpdate);
-                                if(updateTenant)
-                                {
-                                    JOptionPane.showMessageDialog(null,"cập nhật  thành công");
-                                    txtTenantID.setText("");
-                                    txtTenantName.setText("");
-                                    txtDateofBirth.setText("");
-                                    txtElectricUsage.setText("");
-                                    txtDateStart.setText("");
-                                    txtTenantEmail.setText("");
-                                    txtWaterUsage.setText("");
-                                    updateHouseComboBox(houseIDComboBox);
-                                    showAllTenants();
-                                }
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(null, "email sai định dạng vui lòng sửa lại");
-                        txtTenantEmail.setText("");
-                    }
-                }
-                else
-                {
-                    int result = JOptionPane.showConfirmDialog(null, "Chưa tồn tại người dùng này. Bạn có muốn thêm mới người dùng?", "Thông báo", JOptionPane.YES_NO_OPTION);
-
-                    if (result == JOptionPane.YES_OPTION) {
-                        addTenant(); // Thêm mới người dùng
-                    } else {
-                        txtTenantID.setText("");
-                        txtTenantName.setText("");
-                        txtDateofBirth.setText("");
-                        txtElectricUsage.setText("");
-                        txtDateStart.setText("");
-                        txtTenantEmail.setText("");
-                        txtWaterUsage.setText("");
-                        updateHouseComboBox(houseIDComboBox);
-                        showAllTenants();
-                    }
-
-
-                }
+                updateTenant();
 
             }
         });
@@ -669,6 +660,9 @@ public class AdminView extends JFrame {
                 }
             }
         });
+
+        //các action về nhà
+        // action thêm nhà
         btnAddHouse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -701,6 +695,7 @@ public class AdminView extends JFrame {
                 }
             }
         });
+        //nút xoá nhà
         btnDeleteHouse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -769,118 +764,128 @@ public class AdminView extends JFrame {
                 }
             }
         });
+        // nút cập nhật  nhà
         btnUpdateHouse.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int houseId = getSelectedRoomNumber();
-                if(houseId<0)
+                updateHouse();
+            }
+        });
+        btnSearchHouse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String area = txtArea.getText();
+                if(area.equals(""))
                 {
-                    JOptionPane.showMessageDialog(null,"Vui lòng chọn phòng cần sửa từ table");
+                    JOptionPane.showMessageDialog(null, "Vui lòng nhập khoảng diện tích cần tìm các số cách nhau bởi dấu , ví dụ 20,40");
                 }
                 else
                 {
-                    int houseLastStatus = houseController.getHouseStatusByHouseId(houseId);
-                    float area = Float.parseFloat(txtArea.getText());
-                    float roomcost = Float.parseFloat(txtRoomcost.getText());
-                    String furnished = txtFurniture.getText();
-                    int house_Status = (Integer) houseStatusComboBox.getSelectedItem();
-                    if(houseLastStatus==house_Status)
+                    int[] areaNumbers = getNumbersSeparatedByComma(area);
+                    if(areaNumbers!=null&& areaNumbers.length==2)
                     {
-                        House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
-                        boolean updatehouse = houseController.updateHouse(houseNew);
-                        if(updatehouse)
-                        {
-                            JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                            txtArea.setText("");
-                            txtRoomcost.setText("");
-                            txtFurniture.setText("");
-                            showAllHouses();
-                            updateHouseComboBox(houseIDComboBox);
-
+                        float minArea = areaNumbers[0];
+                        float maxArea = areaNumbers[1];
+                        List<House> filteredHouses = houseController.findHousesByArea(minArea,maxArea);
+                        tabelHouseModel.setRowCount(0);
+                        for (House house : filteredHouses) {
+                            Object[] rowData = {
+                                    house.getHouseId(),
+                                    house.getArea(),
+                                    house.getElectricityCost(),
+                                    house.getWaterCost(),
+                                    house.getRoomCost(),
+                                    house.getFurniture(),
+                                    house.getHouse_status()
+                            };
+                            tabelHouseModel.addRow(rowData);
                         }
                     }
                     else
                     {
-                        int choice = JOptionPane.showConfirmDialog(null, "Bạn đang thực hiện cập nhật phòng ở trạng thái 0 tức là phòng trống nếu tiếp tục sẽ xoá người hiện tại đang thuê và tổng tiền thuê chọn No sẽ cập nhật thông tin khác trừ trạng thái nhà", "Xác nhận", JOptionPane.YES_NO_OPTION);
-                        if (choice == JOptionPane.YES_OPTION) {
-                            boolean deleteRental = rentalController.deleteRentalByHouseId(houseId);
-                            boolean deleteTenant = tenantController.deleteTenantByHouseId(houseId);
-                            if(deleteRental)
-                            {
-                                if(deleteTenant)
-                                {
-                                    House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
-                                    boolean updatehouse = houseController.updateHouse(houseNew);
-                                    if(updatehouse)
-                                    {
-                                        JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                                        txtArea.setText("");
-                                        txtRoomcost.setText("");
-                                        txtFurniture.setText("");
-                                        showAllHouses();
-                                        showAllTenants();
-                                        updateHouseComboBox(houseIDComboBox);
-
-                                    }
-                                }
-                                else
-                                {
-                                    House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
-                                    boolean updatehouse = houseController.updateHouse(houseNew);
-                                    if(updatehouse)
-                                    {
-                                        JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                                        txtArea.setText("");
-                                        txtRoomcost.setText("");
-                                        txtFurniture.setText("");
-                                        showAllHouses();
-                                        showAllTenants();
-                                        updateHouseComboBox(houseIDComboBox);
-
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
-                                boolean updatehouse = houseController.updateHouse(houseNew);
-                                if(updatehouse)
-                                {
-                                    JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                                    txtArea.setText("");
-                                    txtRoomcost.setText("");
-                                    txtFurniture.setText("");
-                                    showAllHouses();
-                                    showAllTenants();
-                                    updateHouseComboBox(houseIDComboBox);
-
-                                }
-                            }
-
-                        } else {
-                            House houseNew = new House(houseId,area,roomcost,furnished,houseLastStatus);
-                            boolean updatehouse = houseController.updateHouse(houseNew);
-                            if(updatehouse)
-                            {
-                                JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                                txtArea.setText("");
-                                txtRoomcost.setText("");
-                                txtFurniture.setText("");
-                                showAllHouses();
-                                updateHouseComboBox(houseIDComboBox);
-
-                            }
-
-                        }
-
+                        JOptionPane.showMessageDialog(null, "Vui lòng nhập khoảng diện tích cần tìm các số cách nhau bởi dấu , ví dụ 20,40");
                     }
+                }
 
+            }
+        });
+        btnArrAreaHouse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Gọi hàm để lấy danh sách tất cả các phòng và sắp xếp chúng theo diện tích
+                List<House> sortedHouses = houseController.getSortedHousesByArea();
 
+                // Xóa dữ liệu cũ trong bảng
+                tabelHouseModel.setRowCount(0);
+
+                // Thêm dữ liệu mới vào bảng
+                for (House house : sortedHouses) {
+                    Object[] rowData = {
+                            house.getHouseId(),
+                            house.getArea(),
+                            house.getElectricityCost(),
+                            house.getWaterCost(),
+                            house.getRoomCost(),
+                            house.getFurniture(),
+                            house.getHouse_status()
+                    };
+                    tabelHouseModel.addRow(rowData);
+                }
+            }
+        });
+        btnSearchRental.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String tenantId = txtID.getText(); // Lấy tenant_id từ JTextField txtID
+
+                // Gọi controller để tìm các rentals theo tenant_id
+                RentalController rentalController = new RentalController();
+                List<Rental> rentals = rentalController.findRentalsByTenantId(tenantId);
+
+                // Hiển thị kết quả lên tableRental
+                displayRentalsInTable(rentals);
+            }
+        });
+        btnDeleteRental.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String tenant_id = txtID.getText();
+                if(tenant_id.equals(""))
+                {
+                    JOptionPane.showMessageDialog(null,"vui lòng điền căn cước của người thuê nhà");
+                }
+                else
+                {
+                    boolean tenantUpdate = tenantController.updateElectricWaterUsageToZero(tenant_id);
+                    int house_id = tenantController.getHouseIdByTenantId(tenant_id);
+                    boolean houseUpdate = houseController.updateUtilityCost(house_id,0,0);
+                    if(tenantUpdate && houseUpdate)
+                    {
+                        boolean deleteRental = rentalController.deleteRentalByTenantId(tenant_id);
+                        if(deleteRental)
+                        {
+                            txtID.setText("");
+                            JOptionPane.showMessageDialog(null,"Xoá bill thành công tiền điện nước và số điện nước sử dụng sẽ về 0");
+                            showAllHouses();
+                            showAllTenants();
+                            showAllRentals();
+                        }
+                    }
                 }
             }
         });
 
     }
+    private void displayRentalsInTable(List<Rental> rentals) {
+        DefaultTableModel tableModel = (DefaultTableModel) rentalTable.getModel();
+        tableModel.setRowCount(0); // Xóa tất cả các dòng hiện tại trong table
+
+        for (Rental rental : rentals) {
+            Object[] rowData = {rental.getRentalId(), rental.getHouseId(), rental.getTenantId(), rental.getMonthlyPayment()};
+            tableModel.addRow(rowData);
+        }
+    }
+    // hiển thị thông tin người thuê nhà
     public void displayTenantInfo(String keyword) {
         // Tìm kiếm tenant dựa trên keyword
         Tenant foundTenant = tenantController.findTenantByIdOrEmail(keyword);
@@ -907,6 +912,7 @@ public class AdminView extends JFrame {
             JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin cho " + keyword);
         }
     }
+    //dọn dẹp table trước khi hiển thị
 
     public void clearTable(DefaultTableModel model) {
         int rowCount = model.getRowCount();
@@ -914,8 +920,7 @@ public class AdminView extends JFrame {
             model.removeRow(i);
         }
     }
-
-
+// thêm người thuê nhà
     public void addTenant()
     {
         String tenant_id = txtTenantID.getText();
@@ -953,26 +958,351 @@ public class AdminView extends JFrame {
             else
             {
                 Tenant tenantNew = new Tenant(tenant_id,tenant_name,tenant_birthday,tenant_email,tenant_startDate, tenant_electricUsage,tenant_WaterUsage,house_id);
-                tenantController.addTenant(tenantNew);
+                boolean addTeant = tenantController.addTenant(tenantNew);
                 Rental rentalNew = new Rental(house_id,tenant_id);
                 boolean rent=rentalController.rentHouse(rentalNew);
                 boolean house= houseController.updateHouseStatus(house_id,1);
-                if(rent&&house)
+                boolean setCost = houseController.updateUtilityCost(house_id,tenant_electricUsage,tenant_WaterUsage);
+                boolean rentalCheck = rentalController.updateMonthlyPaymentByHouseId(house_id);
+                if(addTeant && setCost && rentalCheck)
                 {
-                    JOptionPane.showMessageDialog(null, "Thêm khách thuê thành công");
-                    txtTenantID.setText("");
-                    txtTenantName.setText("");
-                    txtDateofBirth.setText("");
-                    txtElectricUsage.setText("");
-                    txtDateStart.setText("");
-                    txtTenantEmail.setText("");
-                    txtWaterUsage.setText("");
+                    if(rent&&house)
+                    {
+                        JOptionPane.showMessageDialog(null, "Thêm khách thuê thành công");
+                        txtTenantID.setText("");
+                        txtTenantName.setText("");
+                        txtDateofBirth.setText("");
+                        txtElectricUsage.setText("");
+                        txtDateStart.setText("");
+                        txtTenantEmail.setText("");
+                        txtWaterUsage.setText("");
+                        updateHouseComboBox(houseIDComboBox);
+                        showAllTenants();
+                        showAllHouses();
+                        showAllRentals();
+                    }
+                }
+            }
+        }
+    }
+      //    Cập nhật nhà
+    private void updateHouse()
+    {
+        int houseId = getSelectedRoomNumber();
+        if(houseId<0)
+        {
+            JOptionPane.showMessageDialog(null,"Vui lòng chọn phòng cần sửa từ table");
+        }
+        else
+        {
+            int houseLastStatus = houseController.getHouseStatusByHouseId(houseId);
+            float area = Float.parseFloat(txtArea.getText());
+            float roomcost = Float.parseFloat(txtRoomcost.getText());
+            String furnished = txtFurniture.getText();
+            int house_Status = (Integer) houseStatusComboBox.getSelectedItem();
+            if(houseLastStatus==house_Status)
+            {
+                House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
+                boolean updatehouse = houseController.updateHouse(houseNew);
+                if(updatehouse)
+                {
+                    JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+                    txtArea.setText("");
+                    txtRoomcost.setText("");
+                    txtFurniture.setText("");
+                    showAllHouses();
                     updateHouseComboBox(houseIDComboBox);
-                    showAllTenants();
+                    boolean checkUpdatehouse = rentalController.updateMonthlyPaymentByHouseId(houseId);
+                    if(checkUpdatehouse)
+                    {
+                        System.out.println("okkkk");
+                    }
+
+                }
+            }
+            else
+            {
+                int choice = JOptionPane.showConfirmDialog(null, "Bạn đang thực hiện cập nhật phòng ở trạng thái 0 tức là phòng trống nếu tiếp tục sẽ xoá người hiện tại đang thuê và tổng tiền thuê chọn No sẽ cập nhật thông tin khác trừ trạng thái nhà", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    boolean deleteRental = rentalController.deleteRentalByHouseId(houseId);
+                    boolean deleteTenant = tenantController.deleteTenantByHouseId(houseId);
+                    if(deleteRental)
+                    {
+                        if(deleteTenant)
+                        {
+                            House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
+                            boolean updatehouse = houseController.updateHouse(houseNew);
+                            if(updatehouse)
+                            {
+                                JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+                                txtArea.setText("");
+                                txtRoomcost.setText("");
+                                txtFurniture.setText("");
+                                showAllHouses();
+                                showAllTenants();
+                                updateHouseComboBox(houseIDComboBox);
+
+                            }
+                        }
+                        else
+                        {
+                            House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
+                            boolean updatehouse = houseController.updateHouse(houseNew);
+                            if(updatehouse)
+                            {
+                                JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+                                txtArea.setText("");
+                                txtRoomcost.setText("");
+                                txtFurniture.setText("");
+                                showAllHouses();
+                                showAllTenants();
+                                updateHouseComboBox(houseIDComboBox);
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        House houseNew = new House(houseId,area,roomcost,furnished,house_Status);
+                        boolean updatehouse = houseController.updateHouse(houseNew);
+                        if(updatehouse)
+                        {
+                            JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+                            txtArea.setText("");
+                            txtRoomcost.setText("");
+                            txtFurniture.setText("");
+                            showAllHouses();
+                            showAllTenants();
+                            updateHouseComboBox(houseIDComboBox);
+
+                        }
+                    }
+
+                } else {
+                    House houseNew = new House(houseId,area,roomcost,furnished,houseLastStatus);
+                    boolean updatehouse = houseController.updateHouse(houseNew);
+                    if(updatehouse)
+                    {
+                        JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+                        txtArea.setText("");
+                        txtRoomcost.setText("");
+                        txtFurniture.setText("");
+                        showAllHouses();
+                        updateHouseComboBox(houseIDComboBox);
+
+                    }
+
                 }
 
+            }
+
+
+        }
+    }
+    public void updateTenant()
+    {
+        clearTable(tableTenantModel);
+
+        String tenant_id = txtTenantID.getText();
+        String tenant_name = txtTenantName.getText();
+        String tenant_birthday = txtDateofBirth.getText();
+        String tenant_email = txtTenantEmail.getText();
+        String tenant_startDate = txtDateStart.getText();
+        float tenant_electricUsage = Float.parseFloat(txtElectricUsage.getText());
+        float tenant_WaterUsage = Float.parseFloat(txtWaterUsage.getText());
+        int house_id = (Integer) houseIDComboBox.getSelectedItem();
+        if(tenant_id.equals("")||tenant_birthday.equals("")||tenant_email.equals("")||tenant_startDate.equals("")||tenant_name.equals("")||txtElectricUsage.getText().equals("")||txtWaterUsage.getText().equals("")) {
+            JOptionPane.showMessageDialog(null,"Các ô dữ liệu phải được điền hoặc chọn đầy đủ, số điện nước phải là số nguyên hoặc thập phân");
+        }else if(!emailCheck.isValidEmail(tenant_email))
+        {
+            JOptionPane.showMessageDialog(null,"email phải đúng định dạng ví dụ tragiang@gmail.com");
+        }
+        else if(tenantController.isTenantIdExists(tenant_id))
+        {
+            if(emailCheck.isValidEmail(tenant_email))
+            {
+                int houseId=tenantController.getHouseIdByTenantId(tenant_id);
+
+                if(houseId!=house_id)
+                {
+                    int r = JOptionPane.showConfirmDialog(null, "Bạn có sự thay đổi về phòng? Lưu ý thay đổi này sẽ dẫn thời thay đổi về giá tổng giá trị tiền của khách ở phòng này.Nếu chỉ muốn thay đổi các thông tin khác hãy chọn NO", "Thông báo", JOptionPane.YES_NO_OPTION);
+                    if(r==JOptionPane.YES_OPTION)
+                    {
+
+                        Tenant tenantNew = new Tenant(tenant_id,tenant_name,tenant_birthday,tenant_email,tenant_startDate, tenant_electricUsage,tenant_WaterUsage,house_id);
+
+                        boolean update = tenantController.updateTenant(tenantNew);
+                        boolean check = houseController.updateHouseStatus(houseId,0);
+                        boolean setCostLast = houseController.updateUtilityCost(houseId,0,0);
+                        boolean updateHouseStatus = houseController.updateHouseStatus(house_id,1);
+                        float monthlyPay = houseController.calculateTotalRentCost(house_id);
+                        boolean haveBill = rentalController.isTenantIdExists(tenant_id);
+                        if(check && updateHouseStatus)
+                        {
+                            if(update && setCostLast)
+                            {
+                                boolean updateRental = rentalController.updateHouseIdByTenantId(tenant_id,house_id);
+                                if(updateRental && haveBill)
+                                {
+                                    boolean updatePayment = rentalController.updateMonthlyPaymentByTenantId(tenant_id,monthlyPay);
+                                    if(updatePayment)
+                                    {
+                                        System.out.println("có bill");
+                                    }
+                                    JOptionPane.showMessageDialog(null,"cập nhật  thành công");
+                                    txtTenantID.setText("");
+                                    txtTenantName.setText("");
+                                    txtDateofBirth.setText("");
+                                    txtElectricUsage.setText("");
+                                    txtDateStart.setText("");
+                                    txtTenantEmail.setText("");
+                                    txtWaterUsage.setText("");
+                                    updateHouseComboBox(houseIDComboBox);
+                                    showAllTenants();
+                                    showAllHouses();
+                                    boolean setCost = houseController.updateUtilityCost(house_id,tenant_electricUsage,tenant_WaterUsage);
+                                    if(setCost)
+                                    {
+                                        System.out.println("successful!=}}}");
+                                        showAllHouses();
+                                    }
+                                }
+                                else
+                                {
+                                    Rental rentalNew = new Rental(house_id,tenant_id);
+                                    boolean insertBill = rentalController.rentHouse(rentalNew);
+                                    if(insertBill)
+                                    {
+                                        boolean updatePayment = rentalController.updateMonthlyPaymentByTenantId(tenant_id,monthlyPay);
+                                        if(updatePayment)
+                                        {
+                                            System.out.println("thêm bill");
+                                        }
+                                        JOptionPane.showMessageDialog(null,"cập nhật  thành công");
+                                        txtTenantID.setText("");
+                                        txtTenantName.setText("");
+                                        txtDateofBirth.setText("");
+                                        txtElectricUsage.setText("");
+                                        txtDateStart.setText("");
+                                        txtTenantEmail.setText("");
+                                        txtWaterUsage.setText("");
+                                        updateHouseComboBox(houseIDComboBox);
+                                        showAllTenants();
+                                        showAllHouses();
+                                        boolean setCost = houseController.updateUtilityCost(house_id,tenant_electricUsage,tenant_WaterUsage);
+                                        if(setCost)
+                                        {
+                                            System.out.println("successful!");
+                                            showAllHouses();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Tenant tenantUpdate = new Tenant(tenant_id,tenant_name,tenant_birthday,tenant_email,tenant_startDate, tenant_electricUsage,tenant_WaterUsage,houseId);
+                        boolean updateTenant = tenantController.updateTenant(tenantUpdate);
+                        boolean checkCost = houseController.updateUtilityCost(houseId,tenant_electricUsage,tenant_WaterUsage);
+                        float monthlyPayment = houseController.calculateTotalRentCost(houseId);
+                        boolean bill = rentalController.isTenantIdExists(tenant_id);
+                        if(bill)
+                        {
+                            boolean UpdatePayment = rentalController.updateMonthlyPaymentByTenantId(tenant_id,monthlyPayment);
+                            if(UpdatePayment)
+                            {
+                                if(updateTenant && checkCost)
+                                {
+                                    JOptionPane.showMessageDialog(null,"cập nhật  thành công");
+                                    txtTenantID.setText("");
+                                    txtTenantName.setText("");
+                                    txtDateofBirth.setText("");
+                                    txtElectricUsage.setText("");
+                                    txtDateStart.setText("");
+                                    txtTenantEmail.setText("");
+                                    txtWaterUsage.setText("");
+                                    updateHouseComboBox(houseIDComboBox);
+                                    showAllTenants();
+                                    showAllHouses();
+                                    showAllRentals();
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            Rental createBill = new Rental(houseId,tenant_id);
+                            boolean CreateBill = rentalController.rentHouse(createBill);
+                            if(CreateBill)
+                            {
+                                boolean UpdatePayment = rentalController.updateMonthlyPaymentByTenantId(tenant_id,monthlyPayment);
+                                if(UpdatePayment)
+                                {
+                                    if(updateTenant && checkCost)
+                                    {
+                                        JOptionPane.showMessageDialog(null,"cập nhật  thành công");
+                                        txtTenantID.setText("");
+                                        txtTenantName.setText("");
+                                        txtDateofBirth.setText("");
+                                        txtElectricUsage.setText("");
+                                        txtDateStart.setText("");
+                                        txtTenantEmail.setText("");
+                                        txtWaterUsage.setText("");
+                                        updateHouseComboBox(houseIDComboBox);
+                                        showAllTenants();
+                                        showAllHouses();
+                                        showAllRentals();
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
 
             }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "email sai định dạng vui lòng sửa lại");
+                txtTenantEmail.setText("");
+            }
+        }
+        else
+        {
+            int result = JOptionPane.showConfirmDialog(null, "Chưa tồn tại người dùng này. Bạn có muốn thêm mới người dùng?", "Thông báo", JOptionPane.YES_NO_OPTION);
+
+            if (result == JOptionPane.YES_OPTION) {
+                addTenant(); // Thêm mới người dùng
+            } else {
+                txtTenantID.setText("");
+                txtTenantName.setText("");
+                txtDateofBirth.setText("");
+                txtElectricUsage.setText("");
+                txtDateStart.setText("");
+                txtTenantEmail.setText("");
+                txtWaterUsage.setText("");
+                updateHouseComboBox(houseIDComboBox);
+                showAllTenants();
+            }
+
+
+        }
+    }
+    public static int[] getNumbersSeparatedByComma(String input) {
+        try {
+            String[] parts = input.split(",");
+            int[] numbers = new int[parts.length];
+
+            for (int i = 0; i < parts.length; i++) {
+                numbers[i] = Integer.parseInt(parts[i].trim());
+            }
+
+            return numbers;
+        } catch (NumberFormatException | NullPointerException e) {
+            // Xử lý nếu có lỗi chuyển đổi hoặc chuỗi là null
+            e.printStackTrace();
+            return null;
         }
     }
 

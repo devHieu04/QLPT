@@ -26,6 +26,23 @@ public class AccountController {
         }
     }
 
+    public String getPasswordByEmail(String email) {
+        try {
+            String query = "SELECT password FROM Account WHERE email = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("password");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // Trả về null nếu xảy ra lỗi hoặc không tìm thấy email
+    }
+
 
     public int login(String username, String password) {
         try {
