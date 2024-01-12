@@ -2,6 +2,7 @@ package View.Account;
 
 import Controller.TenantController;
 import Models.Tenant;
+import TryCatch.DateCheck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,10 +40,10 @@ public class TenantView extends JPanel implements ActionListener {
         lbTitle.setFont(new Font("SansSerif", Font.BOLD, 40));
         lbTitle.setForeground(color);
         lbTitle.setHorizontalAlignment(JLabel.CENTER);
-//===================================================================================
+
         pnInfoBottom = new JPanel();
         pnInfoBottom.setLayout(new GridLayout(1, 2));
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
         pnInfoLeft = new JPanel();
         pnInfoLeft.setLayout(new BoxLayout(pnInfoLeft, BoxLayout.Y_AXIS));
         pnInfoLeft.setBackground(Color.WHITE);
@@ -99,7 +100,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnInfoLeft.add(pnName);
         pnInfoLeft.add(pnBrith);
         pnInfoLeft.add(pnEmail);
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
         pnInfoRight = new JPanel();
         pnInfoRight.setLayout(new BoxLayout(pnInfoRight, BoxLayout.Y_AXIS));
         pnInfoRight.setBackground(Color.WHITE);
@@ -156,15 +157,13 @@ public class TenantView extends JPanel implements ActionListener {
         pnInfoRight.add(pnElectricNumber);
         pnInfoRight.add(pnWaterNumber);
         pnInfoRight.add(pnRoomNumber);
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
         pnInfoBottom.add(pnInfoLeft);
         pnInfoBottom.add(pnInfoRight);
 
         pnTop.add(lbTitle, BorderLayout.NORTH);
         pnTop.add(pnInfoBottom, BorderLayout.CENTER);
-//===================================================================================
-//===================================================================================
-//===================================================================================
+
         pnBottom = new JPanel();
         pnBottom.setLayout(new BorderLayout());
         pnBottom.setBackground(Color.WHITE);
@@ -174,10 +173,10 @@ public class TenantView extends JPanel implements ActionListener {
         lbTitle.setFont(new Font("SansSerif", Font.BOLD, 40));
         lbTitle.setForeground(color);
         lbTitle.setHorizontalAlignment(JLabel.CENTER);
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
         pnUpdateBottom = new JPanel();
         pnUpdateBottom.setLayout(new GridLayout(1, 2));
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
         pnUpdateLeft = new JPanel();
         pnUpdateLeft.setLayout(new BoxLayout(pnUpdateLeft, BoxLayout.Y_AXIS));
         pnUpdateLeft.setBackground(Color.WHITE);
@@ -238,7 +237,7 @@ public class TenantView extends JPanel implements ActionListener {
         pnUpdateLeft.add(pnName);
         pnUpdateLeft.add(pnBrith);
         pnUpdateLeft.add(pnEmail);
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
         pnUpdateRight = new JPanel();
         pnUpdateRight.setLayout(new GridBagLayout());
         pnUpdateRight.setBackground(Color.WHITE);
@@ -284,6 +283,10 @@ public class TenantView extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btnUpdate) {
             input();
+            if (DateCheck.isValidDate(dateOfBirth)) {
+                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ");
+                return;
+            }
             tenC.updateTenant(new Tenant(tenantId, name, dateOfBirth, email));
             setValue();
         }

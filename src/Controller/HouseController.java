@@ -13,13 +13,29 @@ public class HouseController {
 
     public boolean addHouse(House house) {
         try {
-            String query = "INSERT INTO House (area, electricity_cost, water_cost, room_cost, furniture) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO House (area, room_cost, furniture, house_status) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setFloat(1, house.getArea());
-            preparedStatement.setFloat(2, house.getElectricityCost());
-            preparedStatement.setFloat(3, house.getWaterCost());
-            preparedStatement.setFloat(4, house.getRoomCost());
-            preparedStatement.setString(5, house.getFurniture());
+            preparedStatement.setFloat(2, house.getRoomCost());
+            preparedStatement.setString(3, house.getFurniture());
+            preparedStatement.setInt(4, house.getHouse_status());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean updateHouse(House house) {
+        try {
+            String query = "UPDATE House SET area = ?, room_cost = ?, furniture = ?, house_status = ? WHERE house_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setFloat(1, house.getArea());
+            preparedStatement.setFloat(2, house.getRoomCost());
+            preparedStatement.setString(3, house.getFurniture());
+            preparedStatement.setInt(4, house.getHouse_status());
+            preparedStatement.setInt(5, house.getHouseId());
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -29,10 +45,27 @@ public class HouseController {
         }
     }
 
+
+    public boolean updateHouseStatus(int houseId, int newStatus) {
+        try {
+            String query = "UPDATE House SET house_status = ? WHERE house_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, newStatus);
+            preparedStatement.setInt(2, houseId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
     public List<Integer> getUnoccupiedHouseIDs() {
         List<Integer> houseIDs = new ArrayList<>();
         try {
-            String query = "SELECT house_id FROM House WHERE house_status = 0";
+            String query = "SELECT house_id FROM house WHERE house_status = 0";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -44,6 +77,35 @@ public class HouseController {
             e.printStackTrace();
         }
         return houseIDs;
+    }
+    public boolean deleteHouseById(int houseId) {
+        try {
+            String query = "DELETE FROM House WHERE house_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, houseId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public int getHouseStatusByHouseId(int houseId) {
+        int houseStatus = -1; // Giá trị mặc định nếu không tìm thấy
+        try {
+            String query = "SELECT house_status FROM House WHERE house_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, houseId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                houseStatus = resultSet.getInt("house_status");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return houseStatus;
     }
 
     public List<House> getAllHouses() {
@@ -71,5 +133,28 @@ public class HouseController {
         return houses;
     }
 
-}
+    public House getHouse(int house_id)  {
+        String query = "SELECT * FROM House WHERE house_id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, house_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            if (resultSet.next()) {
+                float area = resultSet.getFloat("area");
+                float electricityCost = resultSet.getFloat("electricity_cost");
+                float waterCost = resultSet.getFloat("water_cost");
+                float roomCost = resultSet.getFloat("room_cost");
+                String furniture = resultSet.getString("furniture");
+                int house_status = resultSet.getInt("house_status");
+
+                House house = new House(house_id, area, electricityCost, waterCost, roomCost, furniture, house_status);
+                return house;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+}

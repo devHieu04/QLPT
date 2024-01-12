@@ -13,6 +13,11 @@ public class Rental {
         this.monthlyPayment = monthlyPayment;
     }
 
+    public Rental(int houseId, String tenantId) {
+        this.houseId = houseId;
+        this.tenantId = tenantId;
+    }
+
     // Getters and setters
     public int getRentalId() {
         return rentalId;

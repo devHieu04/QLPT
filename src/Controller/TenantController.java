@@ -32,15 +32,11 @@ public class TenantController {
             return false;
         }
     }
-
-    public boolean updateTenant(Tenant tenant) {
+    public boolean deleteTenantByHouseId(int houseId) {
         try {
-            String query = "UPDATE Tenant SET name = ?, date_of_birth = ?, email = ? WHERE tenant_id = ?";
+            String query = "DELETE FROM Tenant WHERE house_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, tenant.getName());
-            preparedStatement.setString(2, tenant.getDateOfBirth());
-            preparedStatement.setString(3, tenant.getEmail());
-            preparedStatement.setString(4, tenant.getTenantId());
+            preparedStatement.setInt(1, houseId);
 
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
@@ -50,28 +46,115 @@ public class TenantController {
         }
     }
 
-    public Tenant getTenant(String email) {
-        String query = "SELECT * FROM Tenant WHERE email = ?";
+
+    public Tenant findTenantByIdOrEmail(String keyword) {
+        Tenant tenant = null;
         try {
+            String query = "SELECT * FROM Tenant WHERE tenant_id = ? OR email = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, email);
+            preparedStatement.setString(1, keyword);
+            preparedStatement.setString(2, keyword);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 String tenantId = resultSet.getString("tenant_id");
                 String name = resultSet.getString("name");
                 String dateOfBirth = resultSet.getString("date_of_birth");
+                String email = resultSet.getString("email");
                 String startDate = resultSet.getString("start_date");
                 float electricityUsage = resultSet.getFloat("electricity_usage");
                 float waterUsage = resultSet.getFloat("water_usage");
                 int house_id = resultSet.getInt("house_id");
 
-                return new Tenant(tenantId, name, dateOfBirth, email, startDate, electricityUsage, waterUsage,house_id);
+                tenant = new Tenant(tenantId, name, dateOfBirth, email, startDate, electricityUsage, waterUsage, house_id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return tenant;
+    }
+
+    public boolean updateTenant(Tenant tenant) {
+        try {
+            String query = "UPDATE Tenant SET name = ?, date_of_birth = ?, email = ?, start_date = ?, electricity_usage = ?, water_usage = ?, house_id = ? WHERE tenant_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tenant.getName());
+            preparedStatement.setString(2, tenant.getDateOfBirth());
+            preparedStatement.setString(3, tenant.getEmail());
+            preparedStatement.setString(4, tenant.getStartDate());
+            preparedStatement.setFloat(5, tenant.getElectricityUsage());
+            preparedStatement.setFloat(6, tenant.getWaterUsage());
+            preparedStatement.setInt(7, tenant.getHouse_id());
+            preparedStatement.setString(8, tenant.getTenantId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean isEmailExists(String email) {
+        try {
+            String query = "SELECT * FROM Tenant WHERE email = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next(); // Trả về true nếu có tồn tại email, ngược lại trả về false
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Xử lý ngoại lệ và trả về false nếu có lỗi xảy ra
+        }
+    }
+
+
+    public boolean isTenantIdExists(String tenantId) {
+        try {
+            String query = "SELECT * FROM Tenant WHERE tenant_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tenantId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            return resultSet.next(); // Trả về true nếu có tồn tại tenant_id, ngược lại trả về false
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Xử lý ngoại lệ và trả về false nếu có lỗi xảy ra
+        }
+    }
+
+    public int getHouseIdByTenantId(String tenantId) {
+        int houseId = -1; // Giá trị mặc định nếu không tìm thấy
+
+        try {
+            String query = "SELECT house_id FROM Tenant WHERE tenant_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tenantId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                houseId = resultSet.getInt("house_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return houseId;
+    }
+
+    public boolean deleteTenant(String tenantId) {
+        try {
+            String query = "DELETE FROM Tenant WHERE tenant_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tenantId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public List<Tenant> getAllTenants() {
@@ -100,6 +183,29 @@ public class TenantController {
         return tenants;
     }
 
-    // Các phương thức khác như updateTenant, deleteTenant có thể được thêm vào tương tự
+    public Tenant getTenant(String email) {
+        String query = "SELECT * FROM Tenant WHERE email = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            if (resultSet.next()) {
+                String tenantId = resultSet.getString("tenant_id");
+                String name = resultSet.getString("name");
+                String dateOfBirth = resultSet.getString("date_of_birth");
+                String startDate = resultSet.getString("start_date");
+                float electricityUsage = resultSet.getFloat("electricity_usage");
+                float waterUsage = resultSet.getFloat("water_usage");
+                int house_id = resultSet.getInt("house_id");
+
+                return new Tenant(tenantId, name, dateOfBirth, email, startDate, electricityUsage, waterUsage,house_id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Các phương thức khác như updateTenant, deleteTenant có thể được thêm vào tương tự
 }

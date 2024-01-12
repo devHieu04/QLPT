@@ -20,10 +20,19 @@ public class House {
         this.house_status = house_status;
     }
 
-    public House(float area, float roomCost, String furniture) {
+    public House(float area, float roomCost, String furniture, int house_status) {
         this.area = area;
         this.roomCost = roomCost;
         this.furniture = furniture;
+        this.house_status = house_status;
+    }
+
+    public House(int houseId, float area, float roomCost, String furniture, int house_status) {
+        this.houseId = houseId;
+        this.area = area;
+        this.roomCost = roomCost;
+        this.furniture = furniture;
+        this.house_status = house_status;
     }
 
     public int getHouse_status() {
