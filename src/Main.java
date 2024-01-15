@@ -1,4 +1,3 @@
-import View.Account.AccountView;
 import View.Login;
 
 public class Main {

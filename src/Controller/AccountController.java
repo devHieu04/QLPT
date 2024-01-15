@@ -59,5 +59,4 @@ public class AccountController {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình kiểm tra email
         }
     }
-
 }
