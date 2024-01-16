@@ -19,10 +19,26 @@ public class AccountController {
             preparedStatement.setString(4, "user"); // Đặt mặc định role là "user"
 
             int rowsAffected = preparedStatement.executeUpdate();
+            if (checkEmail(account.getEmail()))
+                return false;
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public boolean checkEmail(String email) {
+        try {
+            String query = "SELECT * FROM Account WHERE email = ?";
+            PreparedStatement preparedStatement = connect.prepareStatement(query);
+            preparedStatement.setString(1, email);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next(); // Trả về true nếu email tồn tại trong cơ sở dữ liệu, ngược lại trả về false
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra trong quá trình kiểm tra email
         }
     }
 

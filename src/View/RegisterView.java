@@ -67,7 +67,7 @@ public class RegisterView extends JFrame implements ActionListener {
         lbUsername.setForeground(Color.BLACK);
 
         txtUsername = new JTextField();
-        txtUsername.setBounds(50, 125, 300, 25);
+        txtUsername.setBounds(50, 125, 300, 30);
         txtUsername.setFont(new Font("SansSerif", Font.PLAIN, 20));
 
         lbEmail = new JLabel("Email");
@@ -76,7 +76,7 @@ public class RegisterView extends JFrame implements ActionListener {
         lbEmail.setForeground(Color.BLACK);
 
         txtEmail = new JTextField();
-        txtEmail.setBounds(50, 185, 300, 25);
+        txtEmail.setBounds(50, 185, 300, 30);
         txtEmail.setFont(new Font("SansSerif", Font.PLAIN, 20));
 
         lbPassword = new JLabel("Password");
@@ -85,7 +85,7 @@ public class RegisterView extends JFrame implements ActionListener {
         lbPassword.setForeground(Color.BLACK);
 
         txtPassword = new JPasswordField();
-        txtPassword.setBounds(50, 245, 300, 25);
+        txtPassword.setBounds(50, 245, 300, 30);
         txtPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
 
         lbConfirmPassword = new JLabel("Confirm Password");
@@ -94,7 +94,7 @@ public class RegisterView extends JFrame implements ActionListener {
         lbConfirmPassword.setForeground(Color.BLACK);
 
         txtConfirmPassword = new JPasswordField();
-        txtConfirmPassword.setBounds(50, 305, 300, 25);
+        txtConfirmPassword.setBounds(50, 305, 300, 30);
         txtConfirmPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
 
         btnRegister = new JButton("Register");

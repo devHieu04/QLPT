@@ -42,7 +42,6 @@ public class AdminView extends JFrame {
         super(s);
         addView();
         addEvent();
-
     }
 
     public void showView()
@@ -1306,8 +1305,8 @@ public class AdminView extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        AdminView adminView = new AdminView("Manager");
-        adminView.showView();
-    }
+//    public static void main(String[] args) {
+//        AdminView adminView = new AdminView("Manager");
+//        adminView.showView();
+//    }
 }
