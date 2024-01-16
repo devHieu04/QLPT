@@ -7,12 +7,12 @@ import java.sql.SQLException;
 import Models.Account;
 
 public class AccountController {
-    private Connection connection = DatabaseConnection.getConnection();
+    private final Connection connect = DatabaseConnection.getConnection();
 
     public boolean registerAccount(Account account) {
         try {
             String query = "INSERT INTO Account (username, password, email, role) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = connect.prepareStatement(query);
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());
             preparedStatement.setString(3, account.getEmail());
@@ -26,51 +26,30 @@ public class AccountController {
         }
     }
 
-    public String getPasswordByEmail(String email) {
+    public Account login(String username, String password) {
         try {
-            String query = "SELECT password FROM Account WHERE email = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, email);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getString("password");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null; // Trả về null nếu xảy ra lỗi hoặc không tìm thấy email
-    }
-
-
-    public int login(String username, String password) {
-        try {
-            String query = "SELECT role FROM Account WHERE username = ? AND password = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            String query = "SELECT role, email FROM Account WHERE username = ? AND password = ?";
+            PreparedStatement preparedStatement = connect.prepareStatement(query);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String role = resultSet.getString("role");
-                if (role.equalsIgnoreCase("admin")) {
-                    return 2; // Trả về 2 nếu đăng nhập là admin
-                } else {
-                    return 1; // Trả về 1 nếu đăng nhập là user thông thường
-                }
-            } else {
-                return 0; // Trả về 0 nếu không có kết quả hoặc đăng nhập không thành công
-            }
+                String email = resultSet.getString("email");
+                return new Account(email, role);
+            } else
+                return null; // Trả về 0 nếu không có kết quả hoặc đăng nhập không thành công
         } catch (SQLException e) {
             e.printStackTrace();
-            return 0; // Trả về 0 nếu xảy ra lỗi trong quá trình đăng nhập
+            return null; // Trả về 0 nếu xảy ra lỗi trong quá trình đăng nhập
         }
     }
+
     public boolean checkEmailExists(String email) {
         try {
             String query = "SELECT * FROM Account WHERE email = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = connect.prepareStatement(query);
             preparedStatement.setString(1, email);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -80,6 +59,4 @@ public class AccountController {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình kiểm tra email
         }
     }
-
-
 }

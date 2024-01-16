@@ -32,6 +32,44 @@ public class TenantController {
             return false;
         }
     }
+    public Tenant getTenant(String email) {
+        String query = "SELECT * FROM Tenant WHERE email = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String tenantId = resultSet.getString("tenant_id");
+                String name = resultSet.getString("name");
+                String dateOfBirth = resultSet.getString("date_of_birth");
+                String startDate = resultSet.getString("start_date");
+                float electricityUsage = resultSet.getFloat("electricity_usage");
+                float waterUsage = resultSet.getFloat("water_usage");
+                int house_id = resultSet.getInt("house_id");
+
+                return new Tenant(tenantId, name, dateOfBirth, email, startDate, electricityUsage, waterUsage,house_id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public boolean updateTenantForUser(Tenant tenant) {
+        try {
+            String query = "UPDATE Tenant SET name = ?, date_of_birth = ? WHERE tenant_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tenant.getName());
+            preparedStatement.setString(2, tenant.getDateOfBirth());
+            preparedStatement.setString(3, tenant.getTenantId());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     public boolean updateElectricWaterUsageToZero(String tenantId) {
         try {
             String query = "UPDATE Tenant SET electricity_usage = 0, water_usage = 0 WHERE tenant_id = ?";

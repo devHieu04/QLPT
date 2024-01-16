@@ -1,36 +1,33 @@
 package View.Account;
 
-import Controller.AccountController;
-import Models.Account;
+import View.Login;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AccountView extends JFrame implements ActionListener {
-    JPanel pnMain, pnRight, pnLeft, pnUser, pnExpense, pnManager;
+public class  AccountView extends JFrame implements ActionListener {
+    JPanel pnMain, pnRight, pnLeft, pnUser, pnExpense, pnLogout;
     CardLayout cardLayout;
-    JButton btnTenant, btnExpense, btnManager;
+    JButton btnTenant, btnExpense, btnLogout;
     ImageIcon imgTenant = new ImageIcon(ClassLoader.getSystemResource("Icon/tent.png"));
     ImageIcon imgHouse = new ImageIcon(ClassLoader.getSystemResource("Icon/house.png"));
-    ImageIcon imgRental = new ImageIcon(ClassLoader.getSystemResource("Icon/rent.png"));
+    ImageIcon imgLogin = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
     Color color = new Color(93, 185, 187);
-    Manager manager = new Manager();
-    Tenant tenant = new Tenant();
-    Expense expense = new Expense();
-
+    String email;
     public AccountView(String s) {
         super(s);
         addView();
     }
-
-    public void showView() {
-        setSize(1000, 600);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
-        setLocationRelativeTo(null);
-        setVisible(true);
+    public void showView(String email) {
+        this.setSize(1000, 600);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.setIconImage(imgLogin.getImage());
+        this.setVisible(true);
+        this.email = email;
     }
 
     private void addView() {
@@ -48,14 +45,15 @@ public class AccountView extends JFrame implements ActionListener {
         pnExpense = new JPanel();
         pnExpense.setLayout(new BorderLayout());
 
-        pnManager = new JPanel();
-        pnManager.setLayout(new BorderLayout());
+        pnLogout = new JPanel();
+        pnLogout.setLayout(new BorderLayout());
 
         btnTenant = new JButton("Người thuê nhà");
         btnTenant.setBackground(Color.WHITE);
         btnTenant.setForeground(color);
         btnTenant.setFont(btnTenant.getFont().deriveFont(Font.BOLD, 20));
         btnTenant.setIcon(imgTenant);
+        btnTenant.setFocusPainted(false);
         btnTenant.addActionListener(this);
 
         btnExpense = new JButton("Chi phí");
@@ -63,30 +61,27 @@ public class AccountView extends JFrame implements ActionListener {
         btnExpense.setForeground(color);
         btnExpense.setFont(btnExpense.getFont().deriveFont(Font.BOLD, 20));
         btnExpense.setIcon(imgHouse);
+        btnExpense.setFocusPainted(false);
         btnExpense.addActionListener(this);
 
-        btnManager = new JButton("Quản lý nhà");
-        btnManager.setBackground(Color.WHITE);
-        btnManager.setForeground(color);
-        btnManager.setFont(btnManager.getFont().deriveFont(Font.BOLD, 20));
-        btnManager.setIcon(imgRental);
-        btnManager.addActionListener(this);
+        btnLogout = new JButton("Đăng xuất");
+        btnLogout.setBackground(Color.WHITE);
+        btnLogout.setForeground(color);
+        btnLogout.setFont(btnLogout.getFont().deriveFont(Font.BOLD, 20));
+        btnLogout.setFocusPainted(false);
+        btnLogout.addActionListener(this);
 
         pnUser.add(btnTenant, BorderLayout.CENTER);
         pnExpense.add(btnExpense, BorderLayout.CENTER);
-        pnManager.add(btnManager, BorderLayout.CENTER);
+        pnLogout.add(btnLogout, BorderLayout.CENTER);
 
         pnLeft.add(pnUser);
         pnLeft.add(pnExpense);
-        pnLeft.add(pnManager);
+        pnLeft.add(pnLogout);
 
         pnRight = new JPanel();
         pnRight.setLayout(new CardLayout());
         cardLayout = (CardLayout) pnRight.getLayout();
-
-        pnRight.add(tenant, "tenant");
-        pnRight.add(expense, "expense");
-        pnRight.add(manager, "manager");
 
         pnMain.add(pnLeft, BorderLayout.WEST);
         pnMain.add(pnRight, BorderLayout.CENTER);
@@ -96,12 +91,25 @@ public class AccountView extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnTenant)
-            cardLayout.show(pnRight, "tenant");
-        else if (e.getSource() == btnExpense)
-            cardLayout.show(pnRight, "expense");
-        else if (e.getSource() == btnManager)
-            cardLayout.show(pnRight, "manager");
+        if (e.getSource() == btnTenant) {
+            pnRight.removeAll();
+            TenantView tenantView = new TenantView(email);
+            pnRight.add(tenantView);
+            pnRight.revalidate();
+            pnRight.repaint();
+        }
+        else if (e.getSource() == btnExpense) {
+            pnRight.removeAll();
+            ExpenseView expenseView = new ExpenseView(email);
+            pnRight.add(expenseView);
+            pnRight.revalidate();
+            pnRight.repaint();
+        }
+        else if (e.getSource() == btnLogout) {
+            this.dispose();
+            Login login = new Login("Welcome to Login");
+            login.showView();
+        }
     }
 //
 //    private AccountController accountController = new AccountController();

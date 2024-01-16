@@ -23,6 +23,14 @@ public class Tenant {
         this.house_id = house_id;
     }
 
+    public Tenant() {
+    }
+
+    public Tenant(String tenantId, String name, String dateOfBirth) {
+        this.tenantId = tenantId;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+    }
 
     public int getHouse_id() {
         return house_id;

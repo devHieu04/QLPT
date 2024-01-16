@@ -47,6 +47,29 @@ public class HouseController {
             return false;
         }
     }
+    public House getHouse(int house_id)  {
+        String query = "SELECT * FROM House WHERE house_id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, house_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                float area = resultSet.getFloat("area");
+                float electricityCost = resultSet.getFloat("electricity_cost");
+                float waterCost = resultSet.getFloat("water_cost");
+                float roomCost = resultSet.getFloat("room_cost");
+                String furniture = resultSet.getString("furniture");
+                int house_status = resultSet.getInt("house_status");
+
+                House house = new House(house_id, area, electricityCost, waterCost, roomCost, furniture, house_status);
+                return house;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public float calculateTotalRentCost(int houseId) {
         try {
             String query = "SELECT electricity_cost, water_cost, room_cost FROM House WHERE house_id = ?";
