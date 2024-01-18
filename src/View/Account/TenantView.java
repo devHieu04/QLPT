@@ -14,7 +14,7 @@ public class TenantView extends JPanel implements ActionListener {
             pnName, pnId, pnBrith, pnEmail, pnStartDate, pnElectricNumber, pnWaterNumber, pnRoomNumber;
     JLabel lbTitle, lbId, lbName, LbBrith, lbEmail, LbStartDate, lbElectricNumber, lbWaterNumber, lbRoomNumber,
             lbTenantName, lbTenantID, lbTenantBrith, lbTenantEmail, lbTenantStartDate, lbTenantElectricNumber, lbTenantWaterNumber, lbTenantRoomNumber;
-    JTextField txtTenantName, txtTenantID, txtTenantBrith, txtTenantEmail;
+    JTextField txtTenantName, txtTenantID, txtTenantBrith;
     JButton btnUpdate;
     String tenantId, name, dateOfBirth, email;
     Font font = new Font("SansSerif", Font.PLAIN, 18);
@@ -181,19 +181,6 @@ public class TenantView extends JPanel implements ActionListener {
         pnUpdateLeft.setLayout(new BoxLayout(pnUpdateLeft, BoxLayout.Y_AXIS));
         pnUpdateLeft.setBackground(Color.WHITE);
 
-        pnId = new JPanel();
-        pnId.setLayout(new FlowLayout());
-        pnId.setBackground(null);
-        lbId = new JLabel("CCCD/CMND ");
-        lbId.setFont(font);
-        lbId.setPreferredSize(new Dimension(120, 25));
-        txtTenantID = new JTextField();
-        txtTenantID.setFont(font);
-        txtTenantID.setPreferredSize(new Dimension(200, 25));
-        txtTenantID.setText(lbTenantID.getText());
-        pnId.add(lbId);
-        pnId.add(txtTenantID);
-
         pnName = new JPanel();
         pnName.setLayout(new FlowLayout());
         pnName.setBackground(null);
@@ -202,7 +189,7 @@ public class TenantView extends JPanel implements ActionListener {
         lbName.setPreferredSize(new Dimension(120, 25));
         txtTenantName = new JTextField();
         txtTenantName.setFont(font);
-        txtTenantName.setPreferredSize(txtTenantID.getPreferredSize());
+        txtTenantName.setPreferredSize(new Dimension(200, 25));
         txtTenantName.setText(lbTenantName.getText());
         pnName.add(lbName);
         pnName.add(txtTenantName);
@@ -215,28 +202,13 @@ public class TenantView extends JPanel implements ActionListener {
         LbBrith.setPreferredSize(new Dimension(120, 25));
         txtTenantBrith = new JTextField();
         txtTenantBrith.setFont(font);
-        txtTenantBrith.setPreferredSize(txtTenantID.getPreferredSize());
+        txtTenantBrith.setPreferredSize(txtTenantName.getPreferredSize());
         txtTenantBrith.setText(lbTenantBrith.getText());
         pnBrith.add(LbBrith);
         pnBrith.add(txtTenantBrith);
 
-        pnEmail = new JPanel();
-        pnEmail.setLayout(new FlowLayout());
-        pnEmail.setBackground(null);
-        lbEmail = new JLabel("Email ");
-        lbEmail.setFont(font);
-        lbEmail.setPreferredSize(new Dimension(120, 25));
-        txtTenantEmail = new JTextField();
-        txtTenantEmail.setFont(font);
-        txtTenantEmail.setPreferredSize(txtTenantID.getPreferredSize());
-        txtTenantEmail.setText(lbTenantEmail.getText());
-        pnEmail.add(lbEmail);
-        pnEmail.add(txtTenantEmail);
-
-        pnUpdateLeft.add(pnId);
         pnUpdateLeft.add(pnName);
         pnUpdateLeft.add(pnBrith);
-        pnUpdateLeft.add(pnEmail);
 
         pnUpdateRight = new JPanel();
         pnUpdateRight.setLayout(new GridBagLayout());
@@ -266,17 +238,15 @@ public class TenantView extends JPanel implements ActionListener {
     }
 
     public void input() {
-        tenantId = txtTenantID.getText();
+        tenantId = lbTenantID.getText();
         name = txtTenantName.getText();
         dateOfBirth = txtTenantBrith.getText();
-        email = txtTenantEmail.getText();
     }
 
     public void setValue() {
         lbTenantID.setText(tenantId);
         lbTenantName.setText(name);
         lbTenantBrith.setText(dateOfBirth);
-        lbTenantEmail.setText(email);
     }
 
     @Override
@@ -287,7 +257,8 @@ public class TenantView extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ");
                 return;
             }
-            tenC.updateTenant(new Tenant(tenantId, name, dateOfBirth, email));
+            tenC.updateTenantForUser(new Tenant(tenantId, name, dateOfBirth));
+            JOptionPane.showMessageDialog(null, "Cập nhật thành công");
             setValue();
         }
     }

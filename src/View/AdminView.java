@@ -53,7 +53,7 @@ public class AdminView extends JFrame {
         this.add(rightPanel,BorderLayout.CENTER);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        this.setIconImage(Toolkit.getDefaultToolkit().getImage("/Icon/login.png"));
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/login.png"));
         this.setVisible(true);
     }
     private void addView() {

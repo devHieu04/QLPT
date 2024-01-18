@@ -21,11 +21,10 @@ public class Tenant {
         this.house_id = house_id;
     }
 
-    public Tenant(String tenantId, String name, String dateOfBirth, String email) {
+    public Tenant(String tenantId, String name, String dateOfBirth) {
         this.tenantId = tenantId;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
-        this.email = email;
     }
 
     public int getHouse_id() {
