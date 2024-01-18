@@ -10,11 +10,13 @@ import javax.swing.*;
 
 public class Login extends JFrame implements ActionListener {
     JPanel pnMain, pnRight,  pnLeft;
-    JLabel lbLogin, lbUsername, lbPassword, lbQues;
+    JLabel lbLogin, lbUsername, lbPassword, lbQues, lbLogo, lbTitle;
     JTextField txtUsername;
     JPasswordField txtPassword;
     JButton btnLogin, btnRegister, btnForgot;
+    Color color = new Color(93, 185, 187);
     ImageIcon loginIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
+    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.png"));
     AdminView adminView = new AdminView("Admin");
     AccountView accountView = new AccountView("Người thuê nhà");
     public Login(String s) {
@@ -28,6 +30,7 @@ public class Login extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setIconImage(loginIcon.getImage());
         setVisible(true);
+        getRootPane().setDefaultButton(btnLogin);
     }
 
     private void addView() {
@@ -39,7 +42,18 @@ public class Login extends JFrame implements ActionListener {
         pnLeft = new JPanel();
         pnLeft.setLayout(null);
         pnLeft.setMinimumSize(new Dimension(400, 500));
-        pnLeft.setBackground(Color.GRAY);
+        pnLeft.setBackground(color);
+
+        lbLogo = new JLabel(Logo);
+        lbLogo.setBounds(100, 100, 200, 200);
+
+        lbTitle = new JLabel("Welcome to Tra Giang House");
+        lbTitle.setBounds(50, 300, 300, 50);
+        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lbTitle.setForeground(Color.WHITE);
+
+        pnLeft.add(lbLogo);
+        pnLeft.add(lbTitle);
 
         pnRight = new JPanel();
         pnRight.setLayout(null);

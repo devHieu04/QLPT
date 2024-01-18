@@ -53,10 +53,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnId.setBackground(null);
         lbId = new JLabel("CCCD/CMND ");
         lbId.setFont(font);
-        lbId.setPreferredSize(new Dimension(175, 25));
+        lbId.setPreferredSize(new Dimension(125, 25));
         lbTenantID = new JLabel(tenant.getTenantId());
         lbTenantID.setFont(font);
-        lbTenantID.setPreferredSize(lbId.getPreferredSize());
+        lbTenantID.setPreferredSize(new Dimension(200, 25));
         pnId.add(lbId);
         pnId.add(lbTenantID);
 
@@ -65,10 +65,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnName.setBackground(null);
         lbName = new JLabel("Họ và tên ");
         lbName.setFont(font);
-        lbName.setPreferredSize(new Dimension(175, 25));
+        lbName.setPreferredSize(lbId.getPreferredSize());
         lbTenantName = new JLabel(tenant.getName());
         lbTenantName.setFont(font);
-        lbTenantName.setPreferredSize(lbName.getPreferredSize());
+        lbTenantName.setPreferredSize(lbTenantID.getPreferredSize());
         pnName.add(lbName);
         pnName.add(lbTenantName);
 
@@ -77,10 +77,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnBrith.setBackground(null);
         LbBrith = new JLabel("Ngày sinh ");
         LbBrith.setFont(font);
-        LbBrith.setPreferredSize(new Dimension(175, 25));
+        LbBrith.setPreferredSize(lbId.getPreferredSize());
         lbTenantBrith = new JLabel(tenant.getDateOfBirth());
         lbTenantBrith.setFont(font);
-        lbTenantBrith.setPreferredSize(LbBrith.getPreferredSize());
+        lbTenantBrith.setPreferredSize(lbTenantID.getPreferredSize());
         pnBrith.add(LbBrith);
         pnBrith.add(lbTenantBrith);
 
@@ -89,10 +89,10 @@ public class TenantView extends JPanel implements ActionListener {
         pnEmail.setBackground(null);
         lbEmail = new JLabel("Email ");
         lbEmail.setFont(font);
-        lbEmail.setPreferredSize(new Dimension(175, 25));
+        lbEmail.setPreferredSize(lbId.getPreferredSize());
         lbTenantEmail = new JLabel(tenant.getEmail());
         lbTenantEmail.setFont(font);
-        lbTenantEmail.setPreferredSize(lbEmail.getPreferredSize());
+        lbTenantEmail.setPreferredSize(lbTenantID.getPreferredSize());
         pnEmail.add(lbEmail);
         pnEmail.add(lbTenantEmail);
 

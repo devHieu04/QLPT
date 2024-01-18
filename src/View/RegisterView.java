@@ -17,11 +17,13 @@ import javax.swing.*;
 
 public class RegisterView extends JFrame implements ActionListener {
     JPanel pnMain, pnRight, pnLeft;
-    JLabel lbRegister, lbUsername, lbEmail, lbPassword, lbConfirmPassword, lbQues;
+    JLabel lbRegister, lbUsername, lbEmail, lbPassword, lbConfirmPassword, lbQues, lbLogo, lbTitle;
     JTextField txtUsername, txtEmail;
     JPasswordField txtPassword, txtConfirmPassword;
     JButton btnLogin, btnRegister;
+    Color color = new Color(93, 185, 187);
     ImageIcon RegisterIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/register.png"));
+    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.png"));
     Login login = new Login("Welcome to Login");
 
     public RegisterView(String s) {
@@ -48,7 +50,18 @@ public class RegisterView extends JFrame implements ActionListener {
         pnLeft.setLayout(null);
         pnLeft.setMinimumSize(new Dimension(400, 500));
         pnLeft.setBounds(0, 0, 400, 500);
-        pnLeft.setBackground(Color.GRAY);
+        pnLeft.setBackground(color);
+
+        lbLogo = new JLabel(Logo);
+        lbLogo.setBounds(100, 100, 200, 200);
+
+        lbTitle = new JLabel("Welcome to Tra Giang house");
+        lbTitle.setBounds(50, 300, 300, 50);
+        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lbTitle.setForeground(Color.WHITE);
+
+        pnLeft.add(lbLogo);
+        pnLeft.add(lbTitle);
 
         pnRight = new JPanel();
         pnRight.setLayout(null);
@@ -165,6 +178,7 @@ public class RegisterView extends JFrame implements ActionListener {
                                     txtPassword.setText("");
                                     txtConfirmPassword.setText("");
                                     login.showView();
+                                    dispose();
                                 }
                             } else {
                                 JOptionPane.showMessageDialog(null, "password phải bao gồm ít nhất 1 chữ in hoa , 1 chữ số , 1 kí tự đặc biệt và có độ dài hơn 8 kí tự");

@@ -140,7 +140,7 @@ public class ExpenseView extends JPanel {
         pnFurniture = new JPanel();
         pnFurniture.setBackground(null);
         pnFurniture.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        lbFurniture = new JLabel("Tiền thuê nhà ");
+        lbFurniture = new JLabel("Nội thất");
         lbFurniture.setFont(fontB);
         lbFurniture.setForeground(color);
         lbFurniture.setPreferredSize(new Dimension(175, 25));
@@ -161,7 +161,7 @@ public class ExpenseView extends JPanel {
         lbTotal.setForeground(color);
         lbTotal.setPreferredSize(new Dimension(175, 50));
         lbTotal.setHorizontalAlignment(JLabel.LEFT);
-        lbResultTotal = new JLabel(house.getWaterCost() + house.getElectricityCost() + house.getRoomCost() + "");
+        lbResultTotal = new JLabel(String.valueOf(house.getWaterCost() == 0 || house.getElectricityCost() == 0 ? 0.0 : house.getWaterCost() + house.getElectricityCost() + house.getRoomCost() + ""));
         lbResultTotal.setFont(new Font("SansSerif", Font.PLAIN, 35));
         lbResultTotal.setForeground(Color.BLACK);
         lbResultTotal.setPreferredSize(lbTotal.getPreferredSize());
