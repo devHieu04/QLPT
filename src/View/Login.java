@@ -47,7 +47,7 @@ public class Login extends JFrame implements ActionListener {
         lbLogo = new JLabel(Logo);
         lbLogo.setBounds(100, 100, 200, 200);
 
-        lbTitle = new JLabel("Welcome to Tra Giang House");
+        lbTitle = new JLabel("Welcome to Tra Giang Houses");
         lbTitle.setBounds(50, 300, 300, 50);
         lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lbTitle.setForeground(Color.WHITE);
