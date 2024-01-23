@@ -43,7 +43,9 @@ public class AdminView extends JFrame implements ActionListener {
     TenantController tenC = new TenantController();
     Color myColor = new Color(93, 185, 187);
     CardLayout cardLayout;
-    String[] colNames = {"Số phòng","Diện tích","Tiền điện", "Tiền nước","Giá phòng","Nội thất","Trạng thái"};
+    String[] colNamesHouse = {"Số phòng","Diện tích","Tiền điện", "Tiền nước","Giá phòng","Nội thất","Trạng thái"};
+    String[] colNamesRental = {"ID rental","Số phòng", "CCCD người thuê","Tổng tiền nhà"};
+    String[] colNamesTenant = {"CCCD", "Tên", "ngày sinh", "email", "ngày bắt đầu ở", "số điện tiêu tụ", "số nước tiêu thụ", "số phòng"};
     ImageIcon imgAdd = new ImageIcon(ClassLoader.getSystemResource("Icon/addhouse.png"));
     ImageIcon imgUpdata = new ImageIcon(ClassLoader.getSystemResource("Icon/updatehouse.png"));
     ImageIcon imgDelete = new ImageIcon(ClassLoader.getSystemResource("Icon/deletehouse.png"));
@@ -154,7 +156,7 @@ public class AdminView extends JFrame implements ActionListener {
         tbRental.setModel(tblRental);
         listScroll = new JScrollPane();
 
-        for (String i : colNames)
+        for (String i : colNamesRental)
             tblRental.addColumn(i);
 
         listScroll.setViewportView(tbRental);
@@ -214,7 +216,7 @@ public class AdminView extends JFrame implements ActionListener {
         tbHouse.setModel(tblHouse);
         listScroll = new JScrollPane();
 
-        for (String i : colNames)
+        for (String i : colNamesHouse)
             tblHouse.addColumn(i);
 
         listScroll.setViewportView(tbHouse);
@@ -276,10 +278,10 @@ public class AdminView extends JFrame implements ActionListener {
         lbStatus.setFont(lbStatus.getFont().deriveFont(Font.PLAIN, 20));
         lbStatus.setForeground(Color.BLACK);
         cbHouseStatus = new JComboBox<>();
-        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
-        model.addElement(0);
-        model.addElement(1);
-        cbHouseStatus.setModel(model);
+        DefaultComboBoxModel<Integer> modelHouse = new DefaultComboBoxModel<>();
+        modelHouse.addElement(0);
+        modelHouse.addElement(1);
+        cbHouseStatus.setModel(modelHouse);
         cbHouseStatus.setPreferredSize(new Dimension(300, 35));
         cbHouseStatus.setFont(cbHouseStatus.getFont().deriveFont(Font.PLAIN, 20));
         pnStatus.add(lbStatus);
@@ -292,51 +294,51 @@ public class AdminView extends JFrame implements ActionListener {
         pnBtn.setLayout(new FlowLayout());
         pnBtn.setBackground(Color.WHITE);
 
-        JButton btnAdd = new JButton("Thêm phòng");
-        btnAdd.setBackground(Color.WHITE);
-        btnAdd.setForeground(Color.BLACK);
-        btnAdd.setFont(btnAdd.getFont().deriveFont(Font.PLAIN, 17));
-        btnAdd.setIcon(imgAdd);
-        btnAdd.setFocusPainted(false);
-        btnAdd.addActionListener(this);
+        btnAddHouse = new JButton("Thêm phòng");
+        btnAddHouse.setBackground(Color.WHITE);
+        btnAddHouse.setForeground(Color.BLACK);
+        btnAddHouse.setFont(btnAddHouse.getFont().deriveFont(Font.PLAIN, 17));
+        btnAddHouse.setIcon(imgAdd);
+        btnAddHouse.setFocusPainted(false);
+        btnAddHouse.addActionListener(this);
 
-        JButton btnUpdate = new JButton("Cập nhật phòng");
-        btnUpdate.setBackground(Color.WHITE);
-        btnUpdate.setForeground(Color.BLACK);
-        btnUpdate.setFont(btnUpdate.getFont().deriveFont(Font.PLAIN, 17));
-        btnUpdate.setIcon(imgUpdata);
-        btnUpdate.setFocusPainted(false);
-        btnUpdate.addActionListener(this);
+        btnUpdateHouse = new JButton("Cập nhật phòng");
+        btnUpdateHouse.setBackground(Color.WHITE);
+        btnUpdateHouse.setForeground(Color.BLACK);
+        btnUpdateHouse.setFont(btnUpdateHouse.getFont().deriveFont(Font.PLAIN, 17));
+        btnUpdateHouse.setIcon(imgUpdata);
+        btnUpdateHouse.setFocusPainted(false);
+        btnUpdateHouse.addActionListener(this);
 
-        JButton btnDelete = new JButton("Xóa phòng");
-        btnDelete.setBackground(Color.WHITE);
-        btnDelete.setForeground(Color.BLACK);
-        btnDelete.setFont(btnDelete.getFont().deriveFont(Font.PLAIN, 17));
-        btnDelete.setIcon(imgDelete);
-        btnDelete.setFocusPainted(false);
-        btnDelete.addActionListener(this);
+        btnDeleteHouse = new JButton("Xóa phòng");
+        btnDeleteHouse.setBackground(Color.WHITE);
+        btnDeleteHouse.setForeground(Color.BLACK);
+        btnDeleteHouse.setFont(btnDeleteHouse.getFont().deriveFont(Font.PLAIN, 17));
+        btnDeleteHouse.setIcon(imgDelete);
+        btnDeleteHouse.setFocusPainted(false);
+        btnDeleteHouse.addActionListener(this);
 
-        JButton btnSearch = new JButton("Tìm theo diện tích");
-        btnSearch.setBackground(Color.WHITE);
-        btnSearch.setForeground(Color.BLACK);
-        btnSearch.setFont(btnSearch.getFont().deriveFont(Font.PLAIN, 17));
-        btnSearch.setIcon(imgSearch);
-        btnSearch.setFocusPainted(false);
-        btnSearch.addActionListener(this);
+        btnSearchHouse = new JButton("Tìm theo diện tích");
+        btnSearchHouse.setBackground(Color.WHITE);
+        btnSearchHouse.setForeground(Color.BLACK);
+        btnSearchHouse.setFont(btnSearchHouse.getFont().deriveFont(Font.PLAIN, 17));
+        btnSearchHouse.setIcon(imgSearch);
+        btnSearchHouse.setFocusPainted(false);
+        btnSearchHouse.addActionListener(this);
 
-        JButton btnArrArea = new JButton("Sắp xếp theo diện tích");
-        btnArrArea.setBackground(Color.WHITE);
-        btnArrArea.setForeground(Color.BLACK);
-        btnArrArea.setFont(btnArrArea.getFont().deriveFont(Font.PLAIN, 17));
-        btnArrArea.setIcon(imgSearch);
-        btnArrArea.setFocusPainted(false);
-        btnArrArea.addActionListener(this);
+        btnArrAreaHouse = new JButton("Sắp xếp theo diện tích");
+        btnArrAreaHouse.setBackground(Color.WHITE);
+        btnArrAreaHouse.setForeground(Color.BLACK);
+        btnArrAreaHouse.setFont(btnArrAreaHouse.getFont().deriveFont(Font.PLAIN, 17));
+        btnArrAreaHouse.setIcon(imgSearch);
+        btnArrAreaHouse.setFocusPainted(false);
+        btnArrAreaHouse.addActionListener(this);
 
-        pnBtn.add(btnAdd);
-        pnBtn.add(btnUpdate);
-        pnBtn.add(btnDelete);
-        pnBtn.add(btnSearch);
-        pnBtn.add(btnArrArea);
+        pnBtn.add(btnAddHouse);
+        pnBtn.add(btnUpdateHouse);
+        pnBtn.add(btnDeleteHouse);
+        pnBtn.add(btnSearchHouse);
+        pnBtn.add(btnArrAreaHouse);
 
         pnBottom.add(pnInput1,BorderLayout.WEST);
         pnBottom.add(pnInput2,BorderLayout.CENTER);
@@ -360,7 +362,7 @@ public class AdminView extends JFrame implements ActionListener {
         tbTenant.setModel(tblTenant);
         listScroll = new JScrollPane();
 
-        for (String i : colNames)
+        for (String i : colNamesTenant)
             tblTenant.addColumn(i);
 
         listScroll.setViewportView(tbTenant);
@@ -461,10 +463,12 @@ public class AdminView extends JFrame implements ActionListener {
         lbHouse_id = new JLabel("Số phòng");
         List<Integer> houseIDs = houseC.getUnoccupiedHouseIDs();
         cbHouseID = new JComboBox<>();
+        DefaultComboBoxModel<Integer> modelTenant = new DefaultComboBoxModel<>();
+        for (Integer i : houseIDs)
+            modelTenant.addElement(i);
+        cbHouseID.setModel(modelTenant);
         cbHouseID.setPreferredSize(new Dimension(300, 35));
         cbHouseID.setFont(cbHouseID.getFont().deriveFont(Font.PLAIN, 25));
-        for (Integer i : houseIDs)
-            cbHouseID.addItem(i);
         pnHouse_id.add(lbHouse_id);
         pnHouse_id.add(cbHouseID);
 
