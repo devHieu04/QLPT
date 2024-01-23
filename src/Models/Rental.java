@@ -13,6 +13,18 @@ public class Rental {
         this.monthlyPayment = monthlyPayment;
     }
 
+    public Rental(int rentalId, int houseId, String tenantId, float monthlyPayment) {
+        this.rentalId = rentalId;
+        this.houseId = houseId;
+        this.tenantId = tenantId;
+        this.monthlyPayment = monthlyPayment;
+    }
+
+    public Rental(int houseId, String tenantId) {
+        this.houseId = houseId;
+        this.tenantId = tenantId;
+    }
+
     // Getters and setters
     public int getRentalId() {
         return rentalId;

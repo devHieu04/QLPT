@@ -1,100 +1,204 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package View;
 
-import javax.swing.*;
+import Controller.AccountController;
+import Controller.TenantController;
+import Models.Account;
+import TryCatch.EmailCheck;
+import TryCatch.PasswordCheck;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
 
-public class RegisterView extends JFrame {
-    JTextField txtUsername,txtEmail;
+public class RegisterView extends JFrame implements ActionListener {
+    JPanel pnMain, pnRight, pnLeft;
+    JLabel lbRegister, lbUsername, lbEmail, lbPassword, lbConfirmPassword, lbQues, lbLogo, lbTitle;
+    JTextField txtUsername, txtEmail;
     JPasswordField txtPassword, txtConfirmPassword;
+    JButton btnLogin, btnRegister;
+    ImageIcon RegisterIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/register.png"));
+    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.jpg"));
+    Login login = new Login("Welcome to Login");
 
-    JButton btnRegister , btnCancel;
-
-public RegisterView(String s)
-{
-    super(s);
-    addView();
-    addEvent();
-}
-public void showView()
-{
-    this.setSize(500,350);
-    this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    this.setResizable(false);
-    this.setLocationRelativeTo(null);
-    this.setIconImage(Toolkit.getDefaultToolkit().getImage("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/register.png"));
-    this.setVisible(true);
-}
-    private void addView() {
-        Container container = getContentPane();
-        JPanel panelMain = new JPanel();
-        panelMain.setLayout(new BoxLayout(panelMain,BoxLayout.Y_AXIS));
-        container.add(panelMain);
-
-        JPanel panelTitle = new JPanel();
-        panelTitle.setLayout(new FlowLayout());
-        JLabel lbSignup = new JLabel("Sign Up with app");
-        panelTitle.add(lbSignup);
-        panelMain.add(panelTitle);
-
-        JPanel panelEmail = new JPanel();
-        panelEmail.setLayout(new FlowLayout());
-        JLabel lbMail = new JLabel();
-        lbMail.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/gmail.png"));
-        panelEmail.add(lbMail);
-        txtEmail = new JTextField();
-        txtEmail.setPreferredSize(new Dimension(300,35));
-        panelEmail.add(txtEmail);
-        panelMain.add(panelEmail);
-
-        JPanel panelUser = new JPanel();
-        panelUser.setLayout(new FlowLayout());
-        JLabel lbUser = new JLabel();
-        lbUser.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/user.png"));
-        panelUser.add(lbUser);
-        txtUsername = new JTextField();
-        txtUsername.setPreferredSize(new Dimension(300,35));
-        panelUser.add(txtUsername);
-        panelMain.add(panelUser);
-
-        JPanel panelPassword = new JPanel();
-        panelPassword.setLayout(new FlowLayout());
-        JLabel lbPassword = new JLabel();
-        lbPassword.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/password.png"));
-        panelPassword.add(lbPassword);
-        txtPassword = new JPasswordField();
-        txtPassword.setPreferredSize(new Dimension(300, 35));
-        panelPassword.add(txtPassword);
-        panelMain.add(panelPassword);
-
-        // Panel cho Confirm Password
-        JPanel panelConfirmPassword = new JPanel();
-        panelConfirmPassword.setLayout(new FlowLayout());
-        JLabel lbConfirmPassword = new JLabel();
-        lbConfirmPassword.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/confirm_password.png"));
-        panelConfirmPassword.add(lbConfirmPassword);
-        txtConfirmPassword = new JPasswordField();
-        txtConfirmPassword.setPreferredSize(new Dimension(300, 35));
-        panelConfirmPassword.add(txtConfirmPassword);
-        panelMain.add(panelConfirmPassword);
-
-        JPanel panelButton = new JPanel();
-        panelButton.setLayout(new FlowLayout());
-        btnRegister = new JButton("Register");
-        btnRegister.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/btnRegister.png"));
-        btnRegister.setPreferredSize(new Dimension(200,50));
-        panelButton.add(btnRegister);
-        btnCancel = new JButton("Cancel");
-        btnCancel.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/cancel.png"));
-        panelMain.add(panelButton);
-
-
-
-
-
+    public RegisterView(String s) {
+        super(s);
+        addView();
     }
 
-    private void addEvent()
-    {
+    public void showView() {
+        setSize(800, 500);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setIconImage(RegisterIcon.getImage());
+        setVisible(true);
+    }
 
+    private void addView() {
+        Container container = getContentPane();
+
+        pnMain = new JPanel();
+        pnMain.setLayout(new GridLayout(1, 2));
+
+        pnLeft = new JPanel();
+        pnLeft.setLayout(null);
+        pnLeft.setMinimumSize(new Dimension(400, 500));
+        pnLeft.setBackground(Color.WHITE);
+
+        lbLogo = new JLabel(Logo);
+        lbLogo.setBounds(125, 50, 200, 200);
+
+        lbTitle = new JLabel("Welcome to Tra Giang House");
+        lbTitle.setBounds(60, 300, 300, 50);
+        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lbTitle.setForeground(Color.BLACK);
+
+        pnLeft.add(lbLogo);
+        pnLeft.add(lbTitle);
+
+        pnRight = new JPanel();
+        pnRight.setLayout(null);
+        pnRight.setMinimumSize(new Dimension(400, 500));
+        pnRight.setBounds(400, 0, 400, 500);
+        pnRight.setBackground(Color.WHITE);
+
+        lbRegister = new JLabel("REGISTER");
+        lbRegister.setBounds(140, 30, 200, 50);
+        lbRegister.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        lbRegister.setForeground(Color.BLACK);
+
+        lbUsername = new JLabel("Username");
+        lbUsername.setBounds(50, 100, 100, 20);
+        lbUsername.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        lbUsername.setForeground(Color.BLACK);
+
+        txtUsername = new JTextField();
+        txtUsername.setBounds(50, 125, 300, 30);
+        txtUsername.setFont(new Font("SansSerif", Font.PLAIN, 20));
+
+        lbEmail = new JLabel("Email");
+        lbEmail.setBounds(50, 160, 100, 20);
+        lbEmail.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        lbEmail.setForeground(Color.BLACK);
+
+        txtEmail = new JTextField();
+        txtEmail.setBounds(50, 185, 300, 30);
+        txtEmail.setFont(new Font("SansSerif", Font.PLAIN, 20));
+
+        lbPassword = new JLabel("Password");
+        lbPassword.setBounds(50, 220, 100, 20);
+        lbPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        lbPassword.setForeground(Color.BLACK);
+
+        txtPassword = new JPasswordField();
+        txtPassword.setBounds(50, 245, 300, 30);
+        txtPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
+
+        lbConfirmPassword = new JLabel("Confirm Password");
+        lbConfirmPassword.setBounds(50, 280, 200, 20);
+        lbConfirmPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        lbConfirmPassword.setForeground(Color.BLACK);
+
+        txtConfirmPassword = new JPasswordField();
+        txtConfirmPassword.setBounds(50, 305, 300, 30);
+        txtConfirmPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
+
+        btnRegister = new JButton("Register");
+        btnRegister.setBounds(50, 350, 300, 30);
+        btnRegister.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        btnRegister.setBackground(Color.GRAY);
+        btnRegister.setForeground(Color.BLACK);
+        btnRegister.addActionListener(this);
+
+        lbQues = new JLabel("Already have an account?");
+        lbQues.setBounds(50, 400, 300, 30);
+        lbQues.setFont(new Font("SansSerif", Font.BOLD, 15));
+        lbQues.setForeground(Color.BLACK);
+
+        btnLogin = new JButton("Login");
+        btnLogin.setBounds(240, 400, 50, 30);
+        btnLogin.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        btnLogin.setBackground(null);
+        btnLogin.setBorder(null);
+        btnLogin.setForeground(Color.BLACK);
+        btnLogin.addActionListener(this);
+
+        pnRight.add(lbRegister);
+        pnRight.add(lbUsername);
+        pnRight.add(lbEmail);
+        pnRight.add(lbPassword);
+        pnRight.add(lbConfirmPassword);
+        pnRight.add(txtUsername);
+        pnRight.add(txtEmail);
+        pnRight.add(txtPassword);
+        pnRight.add(txtConfirmPassword);
+        pnRight.add(btnRegister);
+        pnRight.add(lbQues);
+        pnRight.add(btnLogin);
+
+        pnMain.add(pnLeft);
+        pnMain.add(pnRight);
+
+        container.add(pnMain);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnRegister) {
+            String username = txtUsername.getText();
+            String password = String.valueOf(txtPassword.getPassword());
+            String confirm_password = String.valueOf(txtConfirmPassword.getPassword());
+            String email = txtEmail.getText();
+            boolean emailValid = EmailCheck.isValidEmail(email);
+            if (emailValid) {
+                if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirm_password.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Không được để trống các trường thông tin");
+                } else {
+                    if (password.equals(confirm_password)) {
+                        boolean passcheck = PasswordCheck.isPasswordValid(password);
+                        AccountController accountController = new AccountController();
+                        TenantController tenantController = new TenantController();
+                        boolean checkMail = accountController.checkEmailExists(email);
+                        boolean checkUser = tenantController.checkEmai(email);
+                        if (checkMail) {
+                            JOptionPane.showMessageDialog(null, "chọn email khác nhé!!!");
+                        } else if (!checkUser) {
+                            JOptionPane.showMessageDialog(null, "Dùng email bạn đăng ký với chủ nhà!!!");
+                        } else {
+                            if (passcheck) {
+                                Account account = new Account(username, password, email, "user");
+                                boolean i = accountController.registerAccount(account);
+                                if (i) {
+                                    JOptionPane.showMessageDialog(null, "Successful!");
+                                    txtEmail.setText("");
+                                    txtUsername.setText("");
+                                    txtPassword.setText("");
+                                    txtConfirmPassword.setText("");
+                                    login.showView();
+                                    dispose();
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "password phải bao gồm ít nhất 1 chữ in hoa , 1 chữ số , 1 kí tự đặc biệt và có độ dài hơn 8 kí tự");
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Register fail! vui lòng nhập lại các trường dữ liệu khác");
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "nhập email đúng định dạng ví dụ: tragiang05@gmail.com ");
+            }
+        }
+
+        if (e.getSource() == btnLogin) {
+            login.showView();
+            dispose();
+        }
     }
 }
