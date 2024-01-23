@@ -234,6 +234,17 @@ public class TenantController {
         }
         return tenants;
     }
+    public boolean checkEmai(String email) {
+        try {
+            String query = "SELECT email FROM tenant WHERE email = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
 
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     // Các phương thức khác như updateTenant, deleteTenant có thể được thêm vào tương tự
 }

@@ -6,6 +6,7 @@
 package View;
 
 import Controller.AccountController;
+import Controller.TenantController;
 import Models.Account;
 import TryCatch.EmailCheck;
 import TryCatch.PasswordCheck;
@@ -23,7 +24,7 @@ public class RegisterView extends JFrame implements ActionListener {
     JButton btnLogin, btnRegister;
     Color color = new Color(93, 185, 187);
     ImageIcon RegisterIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/register.png"));
-    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.png"));
+    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.jpg"));
     Login login = new Login("Welcome to Login");
 
     public RegisterView(String s) {
@@ -44,21 +45,20 @@ public class RegisterView extends JFrame implements ActionListener {
         Container container = getContentPane();
 
         pnMain = new JPanel();
-        pnMain.setLayout(null);
+        pnMain.setLayout(new GridLayout(1, 2));
 
         pnLeft = new JPanel();
         pnLeft.setLayout(null);
         pnLeft.setMinimumSize(new Dimension(400, 500));
-        pnLeft.setBounds(0, 0, 400, 500);
-        pnLeft.setBackground(color);
+        pnLeft.setBackground(Color.WHITE);
 
         lbLogo = new JLabel(Logo);
-        lbLogo.setBounds(100, 100, 200, 200);
+        lbLogo.setBounds(125, 50, 200, 200);
 
-        lbTitle = new JLabel("Welcome to Tra Giang house");
-        lbTitle.setBounds(50, 300, 300, 50);
-        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lbTitle.setForeground(Color.WHITE);
+        lbTitle = new JLabel("Welcome to Tra Giang House");
+        lbTitle.setBounds(60, 300, 300, 50);
+        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lbTitle.setForeground(Color.BLACK);
 
         pnLeft.add(lbLogo);
         pnLeft.add(lbTitle);
@@ -164,9 +164,13 @@ public class RegisterView extends JFrame implements ActionListener {
                     if (password.equals(confirm_password)) {
                         boolean passcheck = PasswordCheck.isPasswordValid(password);
                         AccountController accountController = new AccountController();
+                        TenantController tenantController = new TenantController();
                         boolean checkMail = accountController.checkEmailExists(email);
+                        boolean checkUser = tenantController.checkEmai(email);
                         if (checkMail) {
                             JOptionPane.showMessageDialog(null, "chọn email khác nhé!!!");
+                        } else if (!checkUser) {
+                            JOptionPane.showMessageDialog(null, "Dùng email bạn đăng ký với chủ nhà!!!");
                         } else {
                             if (passcheck) {
                                 Account account = new Account(username, password, email, "user");

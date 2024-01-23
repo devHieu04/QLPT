@@ -16,7 +16,7 @@ public class Login extends JFrame implements ActionListener {
     JButton btnLogin, btnRegister, btnForgot;
     Color color = new Color(93, 185, 187);
     ImageIcon loginIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
-    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.png"));
+    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.jpg"));
     AdminView adminView = new AdminView("Admin");
     AccountView accountView = new AccountView("Người thuê nhà");
     public Login(String s) {
@@ -42,15 +42,15 @@ public class Login extends JFrame implements ActionListener {
         pnLeft = new JPanel();
         pnLeft.setLayout(null);
         pnLeft.setMinimumSize(new Dimension(400, 500));
-        pnLeft.setBackground(color);
+        pnLeft.setBackground(Color.WHITE);
 
         lbLogo = new JLabel(Logo);
-        lbLogo.setBounds(100, 100, 200, 200);
+        lbLogo.setBounds(125, 50, 200, 200);
 
         lbTitle = new JLabel("Welcome to Tra Giang House");
-        lbTitle.setBounds(50, 300, 300, 50);
-        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lbTitle.setForeground(Color.WHITE);
+        lbTitle.setBounds(60, 300, 300, 50);
+        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lbTitle.setForeground(Color.BLACK);
 
         pnLeft.add(lbLogo);
         pnLeft.add(lbTitle);
