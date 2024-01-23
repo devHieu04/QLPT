@@ -43,6 +43,8 @@ public class AdminView extends JFrame implements ActionListener {
     TenantController tenC = new TenantController();
     Color myColor = new Color(93, 185, 187);
     CardLayout cardLayout;
+    DefaultComboBoxModel<Integer> modelHouse = new DefaultComboBoxModel<>();
+    DefaultComboBoxModel<Integer> modelTenant = new DefaultComboBoxModel<>();
     String[] colNamesHouse = {"Số phòng","Diện tích","Tiền điện", "Tiền nước","Giá phòng","Nội thất","Trạng thái"};
     String[] colNamesRental = {"ID rental","Số phòng", "CCCD người thuê","Tổng tiền nhà"};
     String[] colNamesTenant = {"CCCD", "Tên", "ngày sinh", "email", "ngày bắt đầu ở", "số điện tiêu tụ", "số nước tiêu thụ", "số phòng"};
@@ -55,6 +57,7 @@ public class AdminView extends JFrame implements ActionListener {
     ImageIcon imgHouse = new ImageIcon(ClassLoader.getSystemResource("Icon/house.png"));
     ImageIcon imgRental = new ImageIcon(ClassLoader.getSystemResource("Icon/rent.png"));
     ImageIcon imgLogout = new ImageIcon(ClassLoader.getSystemResource("Icon/signout.png"));
+    List<Integer> houseIDs = houseC.getUnoccupiedHouseIDs();
 
     public AdminView(String s) {
         super(s);
@@ -278,7 +281,6 @@ public class AdminView extends JFrame implements ActionListener {
         lbStatus.setFont(lbStatus.getFont().deriveFont(Font.PLAIN, 20));
         lbStatus.setForeground(Color.BLACK);
         cbHouseStatus = new JComboBox<>();
-        DefaultComboBoxModel<Integer> modelHouse = new DefaultComboBoxModel<>();
         modelHouse.addElement(0);
         modelHouse.addElement(1);
         cbHouseStatus.setModel(modelHouse);
@@ -461,9 +463,7 @@ public class AdminView extends JFrame implements ActionListener {
         pnHouse_id.setLayout(new FlowLayout(FlowLayout.RIGHT));
         pnHouse_id.setBackground(Color.WHITE);
         lbHouse_id = new JLabel("Số phòng");
-        List<Integer> houseIDs = houseC.getUnoccupiedHouseIDs();
         cbHouseID = new JComboBox<>();
-        DefaultComboBoxModel<Integer> modelTenant = new DefaultComboBoxModel<>();
         for (Integer i : houseIDs)
             modelTenant.addElement(i);
         cbHouseID.setModel(modelTenant);
@@ -547,12 +547,9 @@ public class AdminView extends JFrame implements ActionListener {
         }
     }
     private void showAllHouses() {
-        HouseController houseController = new HouseController();
         List<House> houses = houseC.getAllHouses();
-
         // Xóa dữ liệu hiện tại của tableModel
         tblHouse.setRowCount(0);
-
         // Thêm dữ liệu mới từ danh sách các phòng
         for (House house : houses) {
             Object[] rowData = {
@@ -657,15 +654,12 @@ public class AdminView extends JFrame implements ActionListener {
             }
         });
     }
-    public void updateHouseComboBox(JComboBox comboBox) {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        List<Integer> houseIDs = houseC.getUnoccupiedHouseIDs(); // Lấy danh sách house ID không được sử dụng
-
-        for (Integer houseID : houseIDs) {
-            model.addElement(houseID); // Thêm từng house ID vào model
-        }
-
-        comboBox.setModel(model); // Cập nhật lại model cho combox
+    public void updateHouseComboBox() {
+        cbHouseID.removeAllItems(); // Xóa tất cả các item trong combox
+        houseIDs = houseC.getUnoccupiedHouseIDs();
+        for (Integer houseID : houseIDs)
+            modelTenant.addElement(houseID); // Thêm từng house ID vào model
+        cbHouseID.setModel(modelTenant); // Cập nhật lại model cho combox
     }
     private void displayRentalsInTable(List<Rental> rentals) {
         DefaultTableModel tableModel = (DefaultTableModel) tbRental.getModel();
@@ -742,14 +736,8 @@ public class AdminView extends JFrame implements ActionListener {
                 if(addTeant && setCost && rentalCheck) {
                     if(rent&&house) {
                         JOptionPane.showMessageDialog(null, "Thêm khách thuê thành công");
-                        txtCCCD.setText("");
-                        txtName.setText("");
-                        txtDateOfBirth.setText("");
-                        txtEmail.setText("");
-                        txtStartDate.setText("");
-                        txtElectricityUsage.setText("");
-                        txtWaterUsage.setText("");
-                        updateHouseComboBox(cbHouseID);
+                        setTenantNull();
+                        updateHouseComboBox();
                         showAllTenants();
                         showAllHouses();
                         showAllRentals();
@@ -758,7 +746,12 @@ public class AdminView extends JFrame implements ActionListener {
             }
         }
     }
-    //    Cập nhật nhà
+    public void setHouseNull() {
+        txtArea.setText("");
+        txtRoomCost.setText("");
+        txtFurniture.setText("");
+        cbHouseStatus.setSelectedIndex(0);
+    }
     private void updateHouse() {
         int houseId = getSelectedRoomNumber();
         if(houseId<0) {
@@ -774,11 +767,9 @@ public class AdminView extends JFrame implements ActionListener {
                 boolean updatehouse = houseC.updateHouse(houseNew);
                 if(updatehouse) {
                     JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                    txtArea.setText("");
-                    txtRoomCost.setText("");
-                    txtFurniture.setText("");
+                    setHouseNull();
                     showAllHouses();
-                    updateHouseComboBox(cbHouseID);
+                    updateHouseComboBox();
                     boolean checkUpdatehouse = renC.updateMonthlyPaymentByHouseId(houseId);
                     if(checkUpdatehouse) {
                         System.out.println("okkkk");
@@ -795,24 +786,20 @@ public class AdminView extends JFrame implements ActionListener {
                             boolean updatehouse = houseC.updateHouse(houseNew);
                             if (updatehouse) {
                                 JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                                txtArea.setText("");
-                                txtRoomCost.setText("");
-                                txtFurniture.setText("");
+                                setHouseNull();
                                 showAllHouses();
                                 showAllTenants();
-                                updateHouseComboBox(cbHouseID);
+                                updateHouseComboBox();
                             }
                         } else {
                             House houseNew = new House(houseId, area, roomcost, furnished, house_Status);
                             boolean updatehouse = houseC.updateHouse(houseNew);
                             if (updatehouse) {
                                 JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                                txtArea.setText("");
-                                txtRoomCost.setText("");
-                                txtFurniture.setText("");
+                                setHouseNull();
                                 showAllHouses();
                                 showAllTenants();
-                                updateHouseComboBox(cbHouseID);
+                                updateHouseComboBox();
                             }
                         }
                     } else {
@@ -820,12 +807,10 @@ public class AdminView extends JFrame implements ActionListener {
                         boolean updatehouse = houseC.updateHouse(houseNew);
                         if (updatehouse) {
                             JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                            txtArea.setText("");
-                            txtRoomCost.setText("");
-                            txtFurniture.setText("");
+                            setHouseNull();
                             showAllHouses();
                             showAllTenants();
-                            updateHouseComboBox(cbHouseID);
+                            updateHouseComboBox();
                         }
                     }
                 } else {
@@ -833,15 +818,22 @@ public class AdminView extends JFrame implements ActionListener {
                     boolean updatehouse = houseC.updateHouse(houseNew);
                     if (updatehouse) {
                         JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-                        txtArea.setText("");
-                        txtRoomCost.setText("");
-                        txtFurniture.setText("");
+                        setHouseNull();
                         showAllHouses();
-                        updateHouseComboBox(cbHouseID);
+                        updateHouseComboBox();
                     }
                 }
             }
         }
+    }
+    public void setTenantNull() {
+        txtCCCD.setText("");
+        txtName.setText("");
+        txtDateOfBirth.setText("");
+        txtEmail.setText("");
+        txtStartDate.setText("");
+        txtElectricityUsage.setText("");
+        txtWaterUsage.setText("");
     }
     public void updateTenant() {
         clearTable(tblTenant);
@@ -853,7 +845,7 @@ public class AdminView extends JFrame implements ActionListener {
         float tenant_electricUsage = Float.parseFloat(txtElectricityUsage.getText());
         float tenant_WaterUsage = Float.parseFloat(txtWaterUsage.getText());
         int house_id = (Integer) cbHouseID.getSelectedItem();
-        if(tenant_id.equals("")||tenant_birthday.equals("")||tenant_email.equals("")||tenant_startDate.equals("")||tenant_name.equals("")||txtElectricityUsage.getText().equals("")||txtWaterUsage.getText().equals("")) {
+        if(tenant_id.isEmpty() || tenant_birthday.isEmpty() || tenant_email.isEmpty() || tenant_startDate.isEmpty() || tenant_name.isEmpty() || txtElectricityUsage.getText().isEmpty() || txtWaterUsage.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null,"Các ô dữ liệu phải được điền hoặc chọn đầy đủ, số điện nước phải là số nguyên hoặc thập phân");
         } else if(!EmailCheck.isValidEmail(tenant_email)) {
             JOptionPane.showMessageDialog(null,"email phải đúng định dạng ví dụ tragiang@gmail.com");
@@ -862,7 +854,7 @@ public class AdminView extends JFrame implements ActionListener {
                 int houseId = tenC.getHouseIdByTenantId(tenant_id);
                 if(houseId!=house_id) {
                     int r = JOptionPane.showConfirmDialog(null, "Bạn có sự thay đổi về phòng? Lưu ý thay đổi này sẽ dẫn thời thay đổi về giá tổng giá trị tiền của khách ở phòng này.Nếu chỉ muốn thay đổi các thông tin khác hãy chọn NO", "Thông báo", JOptionPane.YES_NO_OPTION);
-                    if(r==JOptionPane.YES_OPTION) {
+                    if(r == JOptionPane.YES_OPTION) {
                         Tenant tenantNew = new Tenant(tenant_id,tenant_name,tenant_birthday,tenant_email,tenant_startDate, tenant_electricUsage,tenant_WaterUsage,house_id);
                         boolean update = tenC.updateTenant(tenantNew);
                         boolean check = houseC.updateHouseStatus(houseId,0);
@@ -875,19 +867,12 @@ public class AdminView extends JFrame implements ActionListener {
                                 boolean updateRental = renC.updateHouseIdByTenantId(tenant_id,house_id);
                                 if(updateRental && haveBill) {
                                     boolean updatePayment = renC.updateMonthlyPaymentByTenantId(tenant_id,monthlyPay);
-                                    if(updatePayment)
-                                    {
+                                    if(updatePayment) {
                                         System.out.println("có bill");
                                     }
                                     JOptionPane.showMessageDialog(null,"cập nhật  thành công");
-                                    txtCCCD.setText("");
-                                    txtName.setText("");
-                                    txtDateOfBirth.setText("");
-                                    txtEmail.setText("");
-                                    txtStartDate.setText("");
-                                    txtElectricityUsage.setText("");
-                                    txtWaterUsage.setText("");
-                                    updateHouseComboBox(cbHouseID);
+                                    setTenantNull();
+                                    updateHouseComboBox();
                                     showAllTenants();
                                     showAllHouses();
                                     boolean setCost = houseC.updateUtilityCost(house_id,tenant_electricUsage,tenant_WaterUsage);
@@ -904,14 +889,8 @@ public class AdminView extends JFrame implements ActionListener {
                                             System.out.println("thêm bill");
                                         }
                                         JOptionPane.showMessageDialog(null,"cập nhật  thành công");
-                                        txtCCCD.setText("");
-                                        txtName.setText("");
-                                        txtDateOfBirth.setText("");
-                                        txtEmail.setText("");
-                                        txtElectricityUsage.setText("");
-                                        txtStartDate.setText("");
-                                        txtWaterUsage.setText("");
-                                        updateHouseComboBox(cbHouseID);
+                                        setTenantNull();
+                                        updateHouseComboBox();
                                         showAllTenants();
                                         showAllHouses();
                                         boolean setCost = houseC.updateUtilityCost(house_id,tenant_electricUsage,tenant_WaterUsage);
@@ -936,14 +915,8 @@ public class AdminView extends JFrame implements ActionListener {
                             if(UpdatePayment) {
                                 if(updateTenant && checkCost) {
                                     JOptionPane.showMessageDialog(null,"cập nhật  thành công");
-                                    txtCCCD.setText("");
-                                    txtName.setText("");
-                                    txtDateOfBirth.setText("");
-                                    txtEmail.setText("");
-                                    txtElectricityUsage.setText("");
-                                    txtStartDate.setText("");
-                                    txtWaterUsage.setText("");
-                                    updateHouseComboBox(cbHouseID);
+                                    setTenantNull();
+                                    updateHouseComboBox();
                                     showAllTenants();
                                     showAllHouses();
                                     showAllRentals();
@@ -957,14 +930,8 @@ public class AdminView extends JFrame implements ActionListener {
                                 if(UpdatePayment) {
                                     if(updateTenant && checkCost) {
                                         JOptionPane.showMessageDialog(null,"cập nhật  thành công");
-                                        txtCCCD.setText("");
-                                        txtName.setText("");
-                                        txtDateOfBirth.setText("");
-                                        txtEmail.setText("");
-                                        txtElectricityUsage.setText("");
-                                        txtWaterUsage.setText("");
-                                        txtStartDate.setText("");
-                                        updateHouseComboBox(cbHouseID);
+                                        setTenantNull();
+                                        updateHouseComboBox();
                                         showAllTenants();
                                         showAllHouses();
                                         showAllRentals();
@@ -984,18 +951,10 @@ public class AdminView extends JFrame implements ActionListener {
             if (result == JOptionPane.YES_OPTION) {
                 addTenant(); // Thêm mới người dùng
             } else {
-                txtCCCD.setText("");
-                txtName.setText("");
-                txtDateOfBirth.setText("");
-                txtEmail.setText("");
-                txtElectricityUsage.setText("");
-                txtWaterUsage.setText("");
-                txtStartDate.setText("");
-                updateHouseComboBox(cbHouseID);
+                setTenantNull();
+                updateHouseComboBox();
                 showAllTenants();
             }
-
-
         }
     }
     public static int[] getNumbersSeparatedByComma(String input) {
@@ -1017,6 +976,7 @@ public class AdminView extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnTenant) {
+            updateHouseComboBox();
             cardLayout.show(pnRight, "Tenant");
         }
         if (e.getSource() == btnRental) {
@@ -1061,7 +1021,7 @@ public class AdminView extends JFrame implements ActionListener {
                             txtStartDate.setText("");
                             txtElectricityUsage.setText("");
                             txtWaterUsage.setText("");
-                            updateHouseComboBox(cbHouseID);
+                            updateHouseComboBox();
                             showAllTenants();
                             showAllHouses();
                         }
@@ -1095,7 +1055,7 @@ public class AdminView extends JFrame implements ActionListener {
             String Furniture = txtFurniture.getText();
             int house_status = (Integer) cbHouseStatus.getSelectedItem();
 
-            if(txtArea.getText().equals("")||txtRoomCost.getText().equals("")||Furniture.equals("")) {
+            if(txtArea.getText().isEmpty() || txtRoomCost.getText().isEmpty() || Furniture.isEmpty()) {
                 JOptionPane.showMessageDialog(null,"điền đầy đủ thông tin về phòng trọ");
             } else {
                 House houseNew = new House(area,room_cost,Furniture,house_status);
@@ -1105,8 +1065,9 @@ public class AdminView extends JFrame implements ActionListener {
                     txtArea.setText("");
                     txtRoomCost.setText("");
                     txtFurniture.setText("");
+                    cbHouseStatus.setSelectedIndex(0);
                     showAllHouses();
-                    updateHouseComboBox(cbHouseStatus);
+                    updateHouseComboBox();
                 } else {
                     JOptionPane.showMessageDialog(null,"Đã có lỗi xảy ra");
                 }
@@ -1127,7 +1088,7 @@ public class AdminView extends JFrame implements ActionListener {
                             showAllHouses();
                             System.out.println("Đã xoá thành công");
                             showAllTenants();
-                            updateHouseComboBox(cbHouseID);
+                            updateHouseComboBox();
                         }
                     } else {
                         boolean deleteRoom = houseC.deleteHouseById(houseId);
@@ -1136,7 +1097,7 @@ public class AdminView extends JFrame implements ActionListener {
                         }
                         showAllHouses();
                         showAllTenants();
-                        updateHouseComboBox(cbHouseID);
+                        updateHouseComboBox();
                     }
                 } else {
                     boolean deleteTenant = tenC.deleteTenantByHouseId(houseId);
@@ -1146,7 +1107,7 @@ public class AdminView extends JFrame implements ActionListener {
                             JOptionPane.showMessageDialog(null,"xoá thành công");
                             showAllHouses();
                             showAllTenants();
-                            updateHouseComboBox(cbHouseID);
+                            updateHouseComboBox();
                         }
                     } else {
                         boolean deleteRoom = houseC.deleteHouseById(houseId);
@@ -1154,7 +1115,7 @@ public class AdminView extends JFrame implements ActionListener {
                             JOptionPane.showMessageDialog(null,"xoá thành công");
                             showAllHouses();
                             showAllTenants();
-                            updateHouseComboBox(cbHouseID);
+                            updateHouseComboBox();
                         }
                     }
                 }

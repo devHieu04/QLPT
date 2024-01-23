@@ -22,7 +22,6 @@ public class RegisterView extends JFrame implements ActionListener {
     JTextField txtUsername, txtEmail;
     JPasswordField txtPassword, txtConfirmPassword;
     JButton btnLogin, btnRegister;
-    Color color = new Color(93, 185, 187);
     ImageIcon RegisterIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/register.png"));
     ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.jpg"));
     Login login = new Login("Welcome to Login");

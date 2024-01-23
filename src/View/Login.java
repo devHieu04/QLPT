@@ -13,8 +13,7 @@ public class Login extends JFrame implements ActionListener {
     JLabel lbLogin, lbUsername, lbPassword, lbQues, lbLogo, lbTitle;
     JTextField txtUsername;
     JPasswordField txtPassword;
-    JButton btnLogin, btnRegister, btnForgot;
-    Color color = new Color(93, 185, 187);
+    JButton btnLogin, btnRegister;
     ImageIcon loginIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
     ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.jpg"));
     AdminView adminView = new AdminView("Admin");
@@ -90,14 +89,6 @@ public class Login extends JFrame implements ActionListener {
         btnLogin.setForeground(Color.BLACK);
         btnLogin.addActionListener(this);
 
-        btnForgot = new JButton("Forgot password?");
-        btnForgot.setBounds(50, 350, 300, 30);
-        btnForgot.setFont(new Font("SansSerif", Font.PLAIN, 15));
-        btnForgot.setBackground(null);
-        btnForgot.setBorder(null);
-        btnForgot.setForeground(Color.BLACK);
-        btnForgot.addActionListener(this);
-
         lbQues = new JLabel("Don't have an account?");
         lbQues.setBounds(50, 400, 300, 30);
         lbQues.setFont(new Font("SansSerif", Font.BOLD, 15));
@@ -117,7 +108,6 @@ public class Login extends JFrame implements ActionListener {
         pnRight.add(lbPassword);
         pnRight.add(txtPassword);
         pnRight.add(btnLogin);
-        pnRight.add(btnForgot);
         pnRight.add(lbQues);
         pnRight.add(btnRegister);
 
