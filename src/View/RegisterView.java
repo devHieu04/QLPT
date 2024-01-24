@@ -54,7 +54,7 @@ public class RegisterView extends JFrame implements ActionListener {
         lbLogo = new JLabel(Logo);
         lbLogo.setBounds(125, 50, 200, 200);
 
-        lbTitle = new JLabel("Welcome to Tra Giang House");
+        lbTitle = new JLabel("Welcome to Tra Giang's House");
         lbTitle.setBounds(60, 300, 300, 50);
         lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lbTitle.setForeground(Color.BLACK);

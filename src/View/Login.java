@@ -46,7 +46,7 @@ public class Login extends JFrame implements ActionListener {
         lbLogo = new JLabel(Logo);
         lbLogo.setBounds(125, 50, 200, 200);
 
-        lbTitle = new JLabel("Welcome to Tra Giang House");
+        lbTitle = new JLabel("Welcome to Tra Giang's House");
         lbTitle.setBounds(60, 300, 300, 50);
         lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lbTitle.setForeground(Color.BLACK);
@@ -123,7 +123,9 @@ public class Login extends JFrame implements ActionListener {
             String password = String.valueOf(txtPassword.getPassword());
             AccountController accountC = new AccountController();
             Account acc = accountC.login(username, password);
-            if (acc.getRole().equals("admin")) {
+            if (acc == null)
+                JOptionPane.showMessageDialog(null, "Tài khoản không tồn tại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            else if (acc.getRole().equals("admin")) {
                 adminView.showView();
                 dispose();
             }

@@ -8,7 +8,6 @@ import Models.Rental;
 import Models.Tenant;
 import TryCatch.DateCheck;
 import TryCatch.EmailCheck;
-import com.sun.tools.javac.Main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -533,7 +532,6 @@ public class AdminView extends JFrame implements ActionListener {
     }
     private void showAllTenants() {
         // Lấy danh sách người thuê nhà từ TenantController
-        TenantController tenantController = new TenantController();
         List<Tenant> tenants = tenC.getAllTenants();
 
         // Xóa dữ liệu hiện tại của tableModel
@@ -746,12 +744,6 @@ public class AdminView extends JFrame implements ActionListener {
             }
         }
     }
-    public void setHouseNull() {
-        txtArea.setText("");
-        txtRoomCost.setText("");
-        txtFurniture.setText("");
-        cbHouseStatus.setSelectedIndex(0);
-    }
     private void updateHouse() {
         int houseId = getSelectedRoomNumber();
         if(houseId<0) {
@@ -825,6 +817,12 @@ public class AdminView extends JFrame implements ActionListener {
                 }
             }
         }
+    }
+    public void setHouseNull() {
+        txtArea.setText("");
+        txtRoomCost.setText("");
+        txtFurniture.setText("");
+        cbHouseStatus.setSelectedIndex(0);
     }
     public void setTenantNull() {
         txtCCCD.setText("");
@@ -1002,7 +1000,7 @@ public class AdminView extends JFrame implements ActionListener {
         if (e.getSource() == btnDeleteTen) {
             clearTable(tblTenant);
             String tenantId = txtCCCD.getText();
-            if (txtCCCD.getText().equals("")) {
+            if (txtCCCD.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 người thuê nhà từ table hoặc nhập từ bàn phím");
             } else if (tenC.isTenantIdExists(txtCCCD.getText())) {
                 int houseId = tenC.getHouseIdByTenantId(tenantId);
@@ -1014,19 +1012,11 @@ public class AdminView extends JFrame implements ActionListener {
                     if (check && setCost) {
                         if (delete) {
                             JOptionPane.showMessageDialog(null, "Xoá thành công");
-                            txtCCCD.setText("");
-                            txtName.setText("");
-                            txtDateOfBirth.setText("");
-                            txtEmail.setText("");
-                            txtStartDate.setText("");
-                            txtElectricityUsage.setText("");
-                            txtWaterUsage.setText("");
+                            setTenantNull();
                             updateHouseComboBox();
                             showAllTenants();
                             showAllHouses();
                         }
-
-
                     }
                 } else {
                     System.out.println("sai gì ở đây");
@@ -1038,10 +1028,10 @@ public class AdminView extends JFrame implements ActionListener {
         if (e.getSource() == btnSearchTen) {
             String tenant_id = txtCCCD.getText();
             String tenant_email = txtEmail.getText();
-            if(tenant_id.equals("")&&tenant_email.equals("")) {
+            if(tenant_id.isEmpty() && tenant_email.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Điền ID hoặc email của người thuê nhà để thực hiện tìm kiếm");
             } else {
-                if(tenant_id.equals("")) {
+                if(tenant_id.isEmpty()) {
                     displayTenantInfo(tenant_email);
                 } else {
                     displayTenantInfo(tenant_id);
@@ -1062,10 +1052,7 @@ public class AdminView extends JFrame implements ActionListener {
                 boolean addHouse = houseC.addHouse(houseNew);
                 if(addHouse) {
                     JOptionPane.showMessageDialog(null,"Thêm phòng thành công");
-                    txtArea.setText("");
-                    txtRoomCost.setText("");
-                    txtFurniture.setText("");
-                    cbHouseStatus.setSelectedIndex(0);
+                    setHouseNull();
                     showAllHouses();
                     updateHouseComboBox();
                 } else {
@@ -1126,7 +1113,7 @@ public class AdminView extends JFrame implements ActionListener {
         }
         if (e.getSource() == btnSearchHouse) {
             String area = txtArea.getText();
-            if(area.equals("")) {
+            if(area.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập khoảng diện tích cần tìm các số cách nhau bởi dấu , ví dụ 20,40");
             } else {
                 int[] areaNumbers = getNumbersSeparatedByComma(area);
@@ -1182,7 +1169,7 @@ public class AdminView extends JFrame implements ActionListener {
         }
         if (e.getSource() == btnDeleteRental) {
             String tenant_id = txtID.getText();
-            if(tenant_id.equals("")) {
+            if(tenant_id.isEmpty()) {
                 JOptionPane.showMessageDialog(null,"vui lòng điền căn cước của người thuê nhà");
             } else {
                 boolean tenantUpdate = tenC.updateElectricWaterUsageToZero(tenant_id);
