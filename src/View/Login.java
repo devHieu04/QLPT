@@ -1,133 +1,155 @@
 package View;
 
 import Controller.AccountController;
+import Models.Account;
+import View.Account.AccountView;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.*;
 
-public class Login extends JFrame {
-    JTextField txtUser ;
-    JPasswordField  txtPassword;
-    JButton btLogin,btRegister;
-    public Login(String s)
-    {
+public class Login extends JFrame implements ActionListener {
+    JPanel pnMain, pnRight,  pnLeft;
+    JLabel lbLogin, lbUsername, lbPassword, lbQues, lbLogo, lbTitle;
+    JTextField txtUsername;
+    JPasswordField txtPassword;
+    JButton btnLogin, btnRegister, btnForgot;
+    Color color = new Color(93, 185, 187);
+    ImageIcon loginIcon = new ImageIcon(ClassLoader.getSystemResource("Icon/login.png"));
+    ImageIcon Logo = new ImageIcon(ClassLoader.getSystemResource("Icon/logo.png"));
+    AdminView adminView = new AdminView("Admin");
+    AccountView accountView = new AccountView("Người thuê nhà");
+    public Login(String s) {
         super(s);
         addView();
-        addEvent();
+    }
+    public void showView() {
+        setSize(800, 500);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setIconImage(loginIcon.getImage());
+        setVisible(true);
+        getRootPane().setDefaultButton(btnLogin);
     }
 
-    public void showView()
-    {
-        this.setSize(500,250);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setIconImage(Toolkit.getDefaultToolkit().getImage("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/login.png"));
-        this.setVisible(true);
-    }
     private void addView() {
+        Container container = getContentPane();
 
-        Container con = getContentPane();
-        Color color = new Color(225,123,16);
-        JPanel pnMain = new JPanel();
-        JLabel label = new JLabel();
-        label.setBackground(color);
-        con.add(pnMain);
-        Color mycolor = new Color(93,185,187);
-        pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS));
-        JPanel pnTop = new JPanel();
-        pnTop.setLayout(new FlowLayout());
-        JLabel lbTop = new JLabel();
-        lbTop.setText("LOG IN APP ");
-        lbTop.setFont(new Font("Ariel Signature", Font.BOLD, 20));
-        lbTop.setForeground(mycolor);
-        pnTop.add(lbTop);
-        pnMain.add(pnTop);
+        pnMain = new JPanel();
+        pnMain.setLayout(new GridLayout(1, 2));
 
+        pnLeft = new JPanel();
+        pnLeft.setLayout(null);
+        pnLeft.setMinimumSize(new Dimension(400, 500));
+        pnLeft.setBackground(color);
 
-        JPanel pnCenter = new JPanel();
-        pnCenter.setLayout(new BorderLayout());
-        JPanel pnRight = new JPanel();
-        JPanel pnLeft = new JPanel();
-        JLabel lbimg = new JLabel();
-//        lbimg.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/lgapp.png"));
-        pnLeft.add(lbimg);
-        pnCenter.add(pnLeft,"West");
+        lbLogo = new JLabel(Logo);
+        lbLogo.setBounds(100, 100, 200, 200);
 
-        JPanel pnUser = new JPanel();
-        pnUser.setLayout(new FlowLayout());
-        JLabel lbuser = new JLabel();
-        lbuser.setText("User:");
-        txtUser = new JTextField(20);
-        pnUser.add(lbuser);
-        pnUser.add(txtUser);
-        pnRight.add(pnUser);
+        lbTitle = new JLabel("Welcome to Tra Giang Houses");
+        lbTitle.setBounds(50, 300, 300, 50);
+        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lbTitle.setForeground(Color.WHITE);
 
-        JPanel pnPassword = new JPanel();
-        pnPassword.setLayout(new FlowLayout());
-        JLabel lbpass = new JLabel();
-        lbpass.setText("Password:");
-        txtPassword = new JPasswordField(20);
-        pnPassword.add(lbpass);
-        pnPassword.add(txtPassword);
-        pnRight.add(pnPassword);
+        pnLeft.add(lbLogo);
+        pnLeft.add(lbTitle);
 
-        pnCenter.add(pnRight,"Center");
-        pnMain.add(pnCenter);
+        pnRight = new JPanel();
+        pnRight.setLayout(null);
+        pnRight.setMinimumSize(new Dimension(400, 500));
+        pnRight.setBackground(Color.WHITE);
 
-        JPanel pnBot = new JPanel();
-        pnBot.setLayout(new FlowLayout());
-        btLogin = new JButton("Log In");
-        btLogin.setBackground(color);
-        btLogin.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/loginbutton.png"));
-        btLogin.setPreferredSize(new Dimension(120, 40)); // Thay đổi kích thước ở đây
-        pnBot.add(btLogin);
+        lbLogin = new JLabel("LOGIN");
+        lbLogin.setBounds(140, 30, 100, 50);
+        lbLogin.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        lbLogin.setForeground(Color.BLACK);
 
-        btRegister= new JButton("Register");
-        btRegister.setBackground(color);
-        btRegister.setIcon(new ImageIcon("/Users/nguyenduyhieu/Documents/JAVAKII/QLPT/src/Icon/btnRegister.png"));
-        btRegister.setPreferredSize(new Dimension(120, 40)); // Thay đổi kích thước ở đây
-        pnBot.add(btRegister);
+        lbUsername = new JLabel("Username");
+        lbUsername.setBounds(50, 100, 100, 30);
+        lbUsername.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        lbUsername.setForeground(Color.BLACK);
 
-        pnMain.add(pnBot);
+        txtUsername = new JTextField();
+        txtUsername.setBounds(50, 130, 300, 30);
+        txtUsername.setFont(new Font("SansSerif", Font.PLAIN, 20));
 
+        lbPassword = new JLabel("Password");
+        lbPassword.setBounds(50, 200, 100, 30);
+        lbPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        lbPassword.setForeground(Color.BLACK);
 
-        lbuser.setPreferredSize(lbpass.getPreferredSize());
+        txtPassword = new JPasswordField();
+        txtPassword.setBounds(50, 230, 300, 30);
+        txtPassword.setFont(new Font("SansSerif", Font.PLAIN, 20));
 
+        btnLogin = new JButton("Login");
+        btnLogin.setBounds(50, 300, 300, 30);
+        btnLogin.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        btnLogin.setBackground(Color.GRAY);
+        btnLogin.setForeground(Color.BLACK);
+        btnLogin.addActionListener(this);
 
+        btnForgot = new JButton("Forgot password?");
+        btnForgot.setBounds(50, 350, 300, 30);
+        btnForgot.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        btnForgot.setBackground(null);
+        btnForgot.setBorder(null);
+        btnForgot.setForeground(Color.BLACK);
+        btnForgot.addActionListener(this);
+
+        lbQues = new JLabel("Don't have an account?");
+        lbQues.setBounds(50, 400, 300, 30);
+        lbQues.setFont(new Font("SansSerif", Font.BOLD, 15));
+        lbQues.setForeground(Color.BLACK);
+
+        btnRegister = new JButton("Register");
+        btnRegister.setBounds(225, 400, 75, 30);
+        btnRegister.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        btnRegister.setBackground(null);
+        btnRegister.setBorder(null);
+        btnRegister.setForeground(Color.BLACK);
+        btnRegister.addActionListener(this);
+
+        pnRight.add(lbLogin);
+        pnRight.add(lbUsername);
+        pnRight.add(txtUsername);
+        pnRight.add(lbPassword);
+        pnRight.add(txtPassword);
+        pnRight.add(btnLogin);
+        pnRight.add(btnForgot);
+        pnRight.add(lbQues);
+        pnRight.add(btnRegister);
+
+        pnMain.add(pnLeft);
+        pnMain.add(pnRight);
+
+        container.add(pnMain);
     }
-    private void addEvent()
-    {
-        btLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = txtUser.getText();
-                String password = String.valueOf(txtPassword.getPassword());
-                AccountController account = new AccountController();
-                int stt = account.login(username, password);
-                if(stt==2)
-                {
-                    System.out.println("ok admin nhé");
-                }
-                else if(stt==1)
-                {
-                    System.out.println("ok user nhé");
-                }
-                else
-                {
-                    System.out.println("sai òi");
-                }
 
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnLogin) {
+            String username = txtUsername.getText();
+            String password = String.valueOf(txtPassword.getPassword());
+            AccountController accountC = new AccountController();
+            Account acc = accountC.login(username, password);
+            if (acc.getRole().equals("admin")) {
+                adminView.showView();
+                dispose();
             }
-        });
-        btRegister.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+            else if (acc.getRole().equals("user")) {
+                accountView.showView(acc.getEmail());
+                dispose();
             }
-        });
-
+            else
+                JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+        if (e.getSource() == btnRegister) {
+            RegisterView register = new RegisterView("Register");
+            register.showView();
+            dispose();
+        }
     }
+
+
 }
